@@ -1,0 +1,24 @@
+
+AVALIAÇÃO 1:
+A proposta é excelente, muito bem documentada e cumpre integralmente todos os requisitos avaliados. Como pontos positivos, destacam-se a integração de 70 arquivos públicos (TABNET, SEIDIGI, SINAN e IBGE), o pipeline de ETL bem detalhado em Python (tratando divergências de códigos IBGE de 6 e 7 dígitos e formatos CSV/XLSX), a modelagem relacional em 3FN no SQLite com dicionário de dados completo e a definição clara das consultas básicas e avançadas com aplicação prática no programa PET-Saúde Digital. Não há pontos negativos relevantes na condução do trabalho, apenas a limitação natural das fontes oficiais quanto à ausência de estimativa populacional própria para 2026 (contornada replicando 2025) e de doses absolutas entre 2015 e 2022. Como sugestão de melhoria para o trabalho final, recomenda-se sinalizar essas particularidades das fontes diretamente na interface do Streamlit e incluir um recurso de exportação das tabelas/gráficos para uso dos preceptores das UBS.
+
+AVALIAÇÃO 2:
+A proposta se destaca positivamente pela relevância pública, pela unificação eficaz de um volume considerável de dados heterogêneos (70 arquivos de quatro fontes distintas), pela modelagem relacional clara e pela proposta de uma solução técnica acessível e sem custos de infraestrutura (Python, SQLite e Streamlit Cloud). Limitações se encontram no escopo geográfico restrito dos dados municipais apenas ao Rio Grande do Sul (mantendo os demais estados agregados em nível da UF), na utilização da população de 2025 como estimativa repetida para o ano de 2026 e nas lacunas históricas de dados brutos (como a ausência da quantidade absoluta de doses aplicadas no período de 2015 a 2022). Sugere-se expandir o detalhamento municipal para outras UFs críticas com histórico de surtos, estimar o volume histórico de doses no período 2015-2022 a partir das taxas de cobertura e populações-alvo, e adicionar análises correlacionais estatísticas formais entre a cobertura vacinal e as taxas de incidência nos municípios.
+
+AVALIAÇÃO 3:
+# Apontamentos e sugestões
+- A figura 1 está muito pequena e de difícil vizualização.
+- Na seção 3, seria interessante apontar a versão das bibliotecas, frameworks e bancos de dados usados, para garantir a reprodutibilidade das análises feitas. Python e SQLite têm suas versões mínimas especificadas, porém matplotlib e pandas, por exemplo, não têm.
+- Poderia ser citado como foi feito o download dos dados (manualmente ou um script automatizado) juntamente com a data da última extração.
+- O início do exantema não é necessariamente o início de todos os sintomas do sarampo. O exantema é um dos sintomas do sarampo e por isso as duas palavras não devem ser usadas como sinônimo.
+- Na seção 2, item 4, é dito que os dados de 2025 são usados como uma aproximação dos dados de 2026 para calcular incidência. Seria interessante explicitar essa limitação metodológica no artigo e explicar quais efeitos ela pode causar nos resultados.
+- Os dados citados na seção 2, item 3, se estendem até 2026 e, portanto, ainda estão incompletos. Seria interessante explicar se isso pode causar algum tipo de efeito nos resultados ou na comparação com anos anteriores.
+- O título menciona a palavra "correlação", que, em um artigo científico, costuma se referir a uma medida estatística. Mas, o artigo aparentemente se limita à comparação e ao cruzamento de dados. Seria mais preciso substituir esse termo por "cruzamento" ou "relação", evitando possíveis confusões.
+
+Fora esses apontamentos, o trabalho parece estar muito bem encaminhado, apresentando ótimas fontes de dados e resultados e análises preliminares.
+
+AVALIAÇÃO 4:
+Oii, eu achei muito bem feito!!. A única coisa que eu sugeriria como ponto de melhoria seria na consulta mensal de doses, seria interassante ter a separação por ano,permitindo comparação mais precisa entre diferentes periodos.
+
+AVALIAÇÃO 5:
+A proposta é boa, o tema de fato é relevante, as consultas básicas são boas, para uma apresentação inicial está excelente, o processo de visualização interativa é uma boa proposta, talvez na iteração permitir vários filtros para o usuário escolher pode tornar essa visualização melhor.
