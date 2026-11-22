@@ -18,8 +18,8 @@ também estão disponíveis em [PowerPoint editável](Entregas/apresentacao_prog
 com [roteiro de fala](Entregas/apresentacao_progresso/roteiro_apresentacao.txt) para cerca de 12–15 minutos.
 
 A [apresentação revisada do dashboard no Google Slides](https://docs.google.com/presentation/d/12mHlmvi2--IQCYzjJJPI0kV1SruTafBgSL8rPvp1Fls/edit)
-está na pasta ProjetoBD do Drive. Essa versão amplia a introdução sobre vacinação e apresenta
-as páginas, os filtros e as exportações do aplicativo. As cópias em
+está na pasta ProjetoBD do Drive, com 21 slides. Essa versão amplia a introdução sobre vacinação,
+explica as tecnologias e o fluxo dos dados e apresenta as páginas, os filtros e as exportações do aplicativo. As cópias em
 [PDF](Entregas/apresentacao_progresso/apresentacao_dashboard_revisada.pdf) e
 [PPTX](Entregas/apresentacao_progresso/apresentacao_dashboard_revisada.pptx), com
 [roteiro revisado](Entregas/apresentacao_progresso/roteiro_dashboard_revisado.txt), estão no repositório.

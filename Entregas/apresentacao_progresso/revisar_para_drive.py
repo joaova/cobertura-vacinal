@@ -51,6 +51,55 @@ def grafico_combinado():
     return b.grafico_salvar(fig,'cruzamento_poa_revisado')
 
 
+def tecnologias():
+    s=b.Slide('Tecnologias utilizadas','Implementação',
+              'Cada ferramenta atende a uma etapa da preparação, consulta ou apresentação dos dados.',
+              'Base: requirements.txt; módulos vacina_sarampo/ e app/ do repositório.')
+    itens=[
+        ('Python e pandas','Leitura, limpeza e transformação dos dados.'),
+        ('SQLite e SQL','Armazenamento e consultas por localidade e ano.'),
+        ('Streamlit','Páginas, filtros, tabelas e cache da aplicação.'),
+        ('Plotly','Gráficos interativos e exportação em PNG/HTML.'),
+        ('SciPy','Correlação de Spearman na análise exploratória.'),
+        ('openpyxl / XlsxWriter','Leitura de XLSX e exportação para Excel.'),
+    ]
+    for i,(titulo,corpo) in enumerate(itens):
+        x=.6+(i%2)*6.15; y=2.16+(i//2)*1.43
+        s.rect(x,y,5.9,1.22,b.WHITE,radius=True)
+        s.text(titulo,x+.23,y+.18,5.4,.39,20,b.INK,bold=True)
+        s.text(corpo,x+.23,y+.78,5.4,.3,16,b.MUTED)
+    s.notas=('Python é a linguagem usada no processamento e na aplicação. O pandas lê e organiza as tabelas; '
+             'openpyxl permite a leitura das planilhas XLSX. O SQLite armazena os dados integrados em arquivo, '
+             'e as consultas SQL selecionam e agregam os registros. O Streamlit organiza as páginas e os controles; '
+             'o Plotly produz os gráficos interativos. O SciPy calcula Spearman na análise exploratória, com apoio '
+             'numérico do NumPy. O XlsxWriter gera as planilhas disponíveis para download. As funções descritas '
+             'foram conferidas em requirements.txt, vacina_sarampo/etl/, consultas.py, estatistica.py e app/common.py. '
+             'Não é necessário listar as versões durante a fala: elas estão fixadas no repositório.')
+    return s
+
+
+def fluxo_tecnologias():
+    s=b.Slide('Como as tecnologias se conectam','Implementação',
+              'O processamento dos arquivos e a consulta no dashboard são etapas distintas.',
+              'Base: vacina_sarampo/etl/, consultas.py, app/common.py e README.md do repositório.')
+    for i,(titulo,corpo,cor) in enumerate([
+        ('Preparação','Python + pandas\nLeitura de CSV e XLSX\nPadronização de códigos e anos',b.BLUE),
+        ('Banco de dados','SQLite + SQL\nTabelas relacionadas\nConsultas por localidade e período',b.TEAL),
+        ('Dashboard','Streamlit + Plotly\nFiltros, tabelas e gráficos\nDownloads em CSV e Excel',b.BLUE),
+    ]):
+        painel(s,.6+i*4.15,2.2,3.8,2.93,titulo,corpo,cor)
+    s.text('ETL em Python → SQLite → dashboard em Streamlit',.8,5.48,11.7,.5,25,b.INK,bold=True)
+    s.text('Código e documentação: Git e GitHub. Dados: arquivos CSV/XLSX e banco SQLite.',.8,6.17,11.7,.35,18,b.MUTED)
+    s.notas=('ETL significa extração, transformação e carga. O comando de processamento lê os arquivos locais '
+             'e gera o banco SQLite. Ao usar os filtros, o dashboard consulta esse banco e apresenta os resultados '
+             'em tabelas e gráficos. O cache do Streamlit evita repetir consultas idênticas e acompanha as alterações '
+             'do arquivo do banco para renovar dados e conexão. A atualização das bases depende da substituição dos '
+             'arquivos e de uma nova execução do ETL; não é uma coleta automática em tempo real. '
+             'Git e GitHub mantêm o histórico do código, da documentação e das entregas. '
+             'O banco gerado não é versionado e pode ser reconstruído a partir dos arquivos do repositório.')
+    return s
+
+
 def criar():
     cobertura = P/'figuras/cobertura_d2.png'
     incidencia = P/'figuras/casos_incidencia.png'
@@ -115,6 +164,8 @@ def criar():
     s.text('Série anual: 2015–2026. Detalhamento mensal de doses: 2023–2026.',.8,6.17,11.7,.35,18,b.MUTED)
     s.notas='Explicar o percurso dos arquivos até o painel. O detalhamento municipal está restrito ao Rio Grande do Sul; o projeto não inclui todos os municípios brasileiros. A série de 2026 é parcial. As fontes e os procedimentos estão descritos na página Dados e metodologia e no artigo.'
     slides.append(s)
+
+    slides.extend([tecnologias(), fluxo_tecnologias()])
 
     s=b.Slide('Navegação e filtros','Funcionamento','As seis páginas oficiais se complementam durante a consulta.')
     paginas=[('01','Visão geral','Indicadores e evolução histórica'),('02','Cobertura vacinal','Doses, UFs e municípios na meta'),('03','Casos e incidência','Contagens e taxas de sarampo'),('04','Cobertura × sarampo','Consulta conjunta das variáveis'),('05','Ficha do município','Detalhe anual e doses mensais'),('06','Dados e metodologia','Fontes, definições e limitações')]

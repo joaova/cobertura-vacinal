@@ -3,7 +3,7 @@ APRESENTAÇÃO REVISADA DO DASHBOARD — 22/11/2026
 Google Slides nativo, na pasta ProjetoBD do Drive:
 https://docs.google.com/presentation/d/12mHlmvi2--IQCYzjJJPI0kV1SruTafBgSL8rPvp1Fls/edit
 
-19 slides em 16:9: 17 de conteúdo e 2 de referências com links.
+21 slides em 16:9: 19 de conteúdo e 2 de referências com links.
 
 Alterações em relação à apresentação anterior:
 - Linguagem objetiva e títulos descritivos.
@@ -12,6 +12,10 @@ Alterações em relação à apresentação anterior:
 - Exemplos numéricos usados para demonstrar as consultas.
 - Remoção da seção de testes e do enfoque em resultados e validação técnica.
 - Sequência sugerida para demonstrar a navegação e as exportações.
+- Dois slides sobre as tecnologias, antes da navegação: função de cada ferramenta
+  e fluxo Python/pandas → SQLite/SQL → Streamlit/Plotly, com Git/GitHub no versionamento.
+- Bibliotecas de apoio: SciPy na análise exploratória, openpyxl na leitura de XLSX
+  e XlsxWriter na exportação para Excel.
 
 Os textos, cartões, formas e o diagrama de imunidade coletiva são elementos
 nativos editáveis. Os quatro gráficos são imagens incorporadas; seus dados
@@ -38,4 +42,5 @@ Fontes da introdução: OMS e Ministério da Saúde, verificadas em 22/11/2026.
 Os gráficos e valores municipais vêm do material complementar do artigo.
 As figuras ilustram as consultas e não são capturas da interface do Streamlit.
 O Streamlit, o banco e os dados brutos não foram alterados nesta revisão.
-As versões anteriores foram preservadas. Nenhum commit foi realizado.
+As versões anteriores foram preservadas. Os arquivos revisados são versionados
+no repositório, mantendo o mesmo link da apresentação nativa no Drive.

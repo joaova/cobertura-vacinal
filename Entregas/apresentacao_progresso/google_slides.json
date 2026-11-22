@@ -5,13 +5,14 @@
   "mime_type": "application/vnd.google-apps.presentation",
   "parent_folder_id": "1ZHpxeN4Dpa2foiUxCHKjYT4YSsYT9D5H",
   "parent_folder_name": "ProjetoBD",
-  "slides": 19,
-  "textos_editaveis": 258,
-  "formas_nativas": 402,
+  "slides": 21,
+  "textos_editaveis": 290,
+  "formas_nativas": 450,
   "graficos_como_imagens": 4,
-  "slides_com_notas": 19,
+  "slides_com_notas": 21,
   "data": "2026-11-22",
-  "revisao_final": "73qli0DV2W1ntg",
-  "pdf_exportado_sha256": "02af7ff271afb1a698fc9313e8bdb32e82af7c8a7ff763110932493a6b41415e",
-  "pptx_origem_sha256": "8ac09566b8fae4155e0d3798fe74fa9191372d50bec8b85e35efd7e11ce85586"
+  "revisao_final": "tkOKzaAuNP15kA",
+  "pdf_exportado_sha256": "969e98914b1a828d991d0bf3d92f05f225ada0a219c1b2583d7d7edd5c88e59f",
+  "pptx_local_sha256": "76b7d9dc9bc254e914dd5de82e7be6b31ee5472a5b6e713855700f6db55f520d",
+  "atualizacao": "Inclusão dos slides 6 e 7 sobre as tecnologias utilizadas e o fluxo da aplicação, com edição da apresentação existente."
 }

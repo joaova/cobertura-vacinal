@@ -1,13 +1,15 @@
 {
   "titulo": "ProjetoBD — Apresentação do dashboard",
   "data": "2026-11-22",
-  "slides": 19,
+  "slides": 21,
   "conteudo": [
     "Dashboard de cobertura vacinal e sarampo",
     "Vacinação e acompanhamento da cobertura",
     "Meta de cobertura vacinal",
     "Como funciona a imunidade de rebanho",
     "Objetivo e escopo do dashboard",
+    "Tecnologias utilizadas",
+    "Como as tecnologias se conectam",
     "Navegação e filtros",
     "Página Visão geral",
     "Cobertura vacinal: série histórica",
@@ -24,9 +26,9 @@
     "Referências: dados e documentação"
   ],
   "arquivos": {
-    "apresentacao_dashboard_revisada.pptx": "8ac09566b8fae4155e0d3798fe74fa9191372d50bec8b85e35efd7e11ce85586",
-    "apresentacao_dashboard_revisada.pdf": "02af7ff271afb1a698fc9313e8bdb32e82af7c8a7ff763110932493a6b41415e",
-    "roteiro_dashboard_revisado.txt": "944102ad44fcbb2440842f30e493c18f4547af4952042d7edab782acf455b0c3"
+    "apresentacao_dashboard_revisada.pptx": "76b7d9dc9bc254e914dd5de82e7be6b31ee5472a5b6e713855700f6db55f520d",
+    "apresentacao_dashboard_revisada.pdf": "969e98914b1a828d991d0bf3d92f05f225ada0a219c1b2583d7d7edd5c88e59f",
+    "roteiro_dashboard_revisado.txt": "0ba320d93cc4bb217702abe0b875298aaf68328717d58f178747715dc4a441a8"
   },
   "observacao": "Textos, formas e diagramas nativos editáveis; gráficos inseridos como imagens. Originais preservados.",
   "novas_fontes": [
@@ -41,5 +43,19 @@
       "verificado_em": "2026-11-22"
     }
   ],
-  "pdf_origem": "Exportação nativa do Google Slides após ajustes de espaçamento em dois blocos de texto."
+  "pdf_origem": "Exportação nativa do Google Slides após inclusão dos dois slides sobre tecnologias.",
+  "alteracoes_mais_recentes": [
+    "Tecnologias utilizadas e suas funções",
+    "Fluxo do ETL até o dashboard",
+    "Paginação atualizada para 21 slides"
+  ],
+  "base_tecnologias": [
+    "requirements.txt",
+    "vacina_sarampo/etl/extratores.py",
+    "vacina_sarampo/etl/carga.py",
+    "vacina_sarampo/consultas.py",
+    "vacina_sarampo/estatistica.py",
+    "app/common.py",
+    "README.md"
+  ]
 }
