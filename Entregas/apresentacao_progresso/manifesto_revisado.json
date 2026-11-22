@@ -1,0 +1,45 @@
+{
+  "titulo": "ProjetoBD — Apresentação do dashboard",
+  "data": "2026-11-22",
+  "slides": 19,
+  "conteudo": [
+    "Dashboard de cobertura vacinal e sarampo",
+    "Vacinação e acompanhamento da cobertura",
+    "Meta de cobertura vacinal",
+    "Como funciona a imunidade de rebanho",
+    "Objetivo e escopo do dashboard",
+    "Navegação e filtros",
+    "Página Visão geral",
+    "Cobertura vacinal: série histórica",
+    "Cobertura: comparação entre territórios",
+    "Página Casos e incidência",
+    "Cobertura × sarampo: evolução por localidade",
+    "Comparação por situação de cobertura",
+    "Página Ficha do município",
+    "Doses mensais dentro da ficha do município",
+    "Página Dados e metodologia",
+    "Exportação e sequência de consulta",
+    "Cuidados na interpretação das consultas",
+    "Referências: vacinação e proteção coletiva",
+    "Referências: dados e documentação"
+  ],
+  "arquivos": {
+    "apresentacao_dashboard_revisada.pptx": "8ac09566b8fae4155e0d3798fe74fa9191372d50bec8b85e35efd7e11ce85586",
+    "apresentacao_dashboard_revisada.pdf": "02af7ff271afb1a698fc9313e8bdb32e82af7c8a7ff763110932493a6b41415e",
+    "roteiro_dashboard_revisado.txt": "944102ad44fcbb2440842f30e493c18f4547af4952042d7edab782acf455b0c3"
+  },
+  "observacao": "Textos, formas e diagramas nativos editáveis; gráficos inseridos como imagens. Originais preservados.",
+  "novas_fontes": [
+    {
+      "titulo": "Ministério da Saúde: Imunidade coletiva",
+      "url": "https://www.gov.br/saude/pt-br/composicao/svsa/pni/faq/faq/vacinas/o-que-e-imunidade-coletiva",
+      "verificado_em": "2026-11-22"
+    },
+    {
+      "titulo": "OMS: How do vaccines work?",
+      "url": "https://www.who.int/news-room/feature-stories/detail/how-do-vaccines-work",
+      "verificado_em": "2026-11-22"
+    }
+  ],
+  "pdf_origem": "Exportação nativa do Google Slides após ajustes de espaçamento em dois blocos de texto."
+}

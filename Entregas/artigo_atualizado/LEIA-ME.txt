@@ -1,0 +1,58 @@
+ARTIGO ATUALIZADO — REVISÃO DE 22/11/2026
+
+Arquivo para leitura: artigo.pdf (11 páginas, formato SBC).
+Fonte editável: artigo.tex.
+Referências: referencias.bib (13 entradas, com endereços verificados).
+Gráficos e modelo: figuras/, em PDF vetorial e PNG.
+Dados das figuras e tabelas: dados/.
+Comparação com o anteprojeto e atendimento ao JEMS: comparacao_e_pareceres.csv.
+Registro da consulta às fontes externas: fontes_verificadas.csv.
+
+O artigo original do Gabriel foi preservado. Esta é uma nova versão baseada em
+entrega_artigo_gabriel.pdf, JEMS_review.pdf e na implementação oficial atual.
+Os nomes completos dos autores foram preservados nos metadados do PDF; dois
+nomes aparecem abreviados na linha de autoria para caber no modelo SBC.
+
+O texto descreve as seis páginas oficiais. Não inclui páginas experimentais nem
+uma página independente de doses mensais. O gráfico mensal permanece na ficha
+municipal. Não foram alterados dados, cálculos ou arquivos da aplicação nesta revisão.
+
+O estilo sbc-template.sty e o arquivo sbc.bst são cópias dos fornecidos na pasta
+Template_SBC/template-latex. Foram mantidos A4, coluna única, fonte Times de
+12 pontos, margens de 3,5/2,5/3 cm e ausência de numeração de páginas. O uso de
+Babel por importação de locale permite compilar também sem brazil.ldf instalado.
+As figuras são autorais, geradas do SQLite; não são capturas da interface.
+
+VALIDAÇÃO REALIZADA
+- 82 testes existentes do projeto aprovados, incluindo as seis páginas e o cache.
+- Recontagem do banco e recálculo das séries, grupos e sensibilidade dos métodos.
+- Compilação do LaTeX/BibTeX, sem referências indefinidas, caracteres ausentes ou
+  avisos de conteúdo excedendo as margens (overfull).
+- Conferência visual das páginas e dos gráficos do PDF.
+- Consulta às 13 fontes externas registradas em fontes_verificadas.csv.
+
+COMO RECOMPILAR
+Na pasta deste artigo, executar:
+    latexmk -pdf -interaction=nonstopmode -halt-on-error artigo.tex
+Requer uma instalação LaTeX com os pacotes usados no preâmbulo e BibTeX.
+
+COMO REGERAR AS FIGURAS
+Na raiz do repositório, após gerar o banco pelo ETL:
+    python Entregas/artigo_atualizado/gerar_figuras.py
+Requer Python e Matplotlib. A biblioteca usada nesta revisão foi Matplotlib 3.11.2.
+O gerador abre db/projeto_sarampo_vacina.db somente para leitura e registra seu hash.
+O banco não é versionado; deve ser reconstruído a partir de dados/ quando necessário.
+
+LIMITAÇÕES QUE PERMANECEM EXPLÍCITAS NO ARTIGO
+- A média mensal e a razão das somas estão implementadas, mas sua equivalência
+  à cobertura anual oficial ainda exige validação; sentinelas com alvo zero afetam
+  os cálculos municipais. Nenhum método foi alterado para preparar o artigo.
+- Existem diferenças entre registros do banco e balanços oficiais de sarampo;
+  as causas não foram reconciliadas. Os totais não são tratados como equivalentes.
+- 2026 tem recortes parciais diferentes e utiliza a população de 2025 do acervo.
+- A população apresentada no ranking acumulado pode ser a do último ano com
+  casos. Os exemplos publicados no artigo utilizam ano específico.
+- Não foram realizados avaliação com preceptores, estudo de usabilidade,
+  validação epidemiológica externa completa ou publicação da aplicação em nuvem.
+
+Nenhum commit foi realizado durante esta revisão.

@@ -1,0 +1,56 @@
+01. Dashboard de cobertura vacinal e sarampo
+Apresentar os autores e o objetivo: demonstrar a aplicação documentada no artigo atualizado. O percurso começa pelos conceitos de cobertura e proteção coletiva e segue pelas seis páginas oficiais. Duração sugerida para a apresentação: 12 a 15 minutos.
+
+02. Vacinação e acompanhamento da cobertura
+O sarampo é uma doença altamente contagiosa. A vacinação é uma medida de prevenção e exige continuidade do esquema. O painel serve ao acompanhamento territorial, sem medir diretamente a resposta imune de cada pessoa. Fontes: https://www.who.int/teams/immunization-vaccines-and-biologicals/diseases/measles ; https://www.who.int/news-room/feature-stories/detail/how-do-vaccines-work ; https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/guias-e-manuais/2024/manual-de-normas-e-procedimentos-para-vacinacao.pdf/@@download/file
+
+03. Meta de cobertura vacinal
+A OMS recomenda que os países alcancem pelo menos 95% com ambas as doses em cada distrito. O percentual administrativo usa os registros e a população-alvo da fonte; não representa a fração imune de toda a comunidade. A meta é uma referência de acompanhamento. Fonte: https://www.who.int/teams/immunization-vaccines-and-biologicals/diseases/measles ; https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/guias-e-manuais/2024/manual-de-normas-e-procedimentos-para-vacinacao.pdf/@@download/file
+
+04. Como funciona a imunidade de rebanho
+As setas representam contatos possíveis, não infecções certas. Quando um número suficiente de pessoas está imune, cada pessoa infectada tende a gerar menos novas infecções e as cadeias de transmissão têm menor chance de se manter. O efeito também beneficia quem não pode receber determinada vacina, mas não garante proteção total. A concentração de suscetíveis pode permitir surtos mesmo quando a média agregada é alta. Não associar cada círculo a uma proporção real de cobertura. Fontes: https://www.gov.br/saude/pt-br/composicao/svsa/pni/faq/faq/vacinas/o-que-e-imunidade-coletiva ; https://www.who.int/news-room/feature-stories/detail/how-do-vaccines-work
+
+05. Objetivo e escopo do dashboard
+Explicar o percurso dos arquivos até o painel. O detalhamento municipal está restrito ao Rio Grande do Sul; o projeto não inclui todos os municípios brasileiros. A série de 2026 é parcial. As fontes e os procedimentos estão descritos na página Dados e metodologia e no artigo.
+
+06. Navegação e filtros
+Apontar o menu lateral e depois os filtros específicos de cada página. A opção global de cálculo afeta as coberturas de 2023 a 2026. A média mensal é o padrão atual do painel. O método alternativo é soma de doses dividida pela soma da população-alvo, vezes 100. Em 2015–2022 são usadas as coberturas anuais fornecidas pela fonte.
+
+07. Página Visão geral
+Na demonstração, selecionar um ano e mostrar quais cartões mudam. Explicar que o gráfico histórico conserva todo o período para contextualizar esse recorte. Usar a página como visão inicial antes de abrir os filtros mais detalhados das demais páginas.
+
+08. Cobertura vacinal: série histórica
+Abrir a aba Série histórica e selecionar as localidades e doses desejadas. O gráfico apresentado foi gerado com os dados do artigo e ilustra a consulta, sem ser uma captura de tela. A mudança de fonte ocorre em 2023 e 2026 é parcial. Não usar a curva como conclusão isolada sobre proteção da população.
+
+09. Cobertura: comparação entre territórios
+Na aba por UF, demonstrar a comparação das duas doses no mesmo ano e a ordenação pela diferença entre elas. Na aba municipal, escolher D2 e filtrar os municípios abaixo de 95%. Mostrar que ausência de dado não equivale a cobertura zero. A classificação depende do método global escolhido.
+
+10. Página Casos e incidência
+As duas medidas respondem a perguntas diferentes: casos mostram o volume registrado; incidência relaciona casos à população. O gráfico ilustra seis municípios escolhidos no artigo, não o ranking completo da tela. Explicar o uso do filtro de população mínima ao comparar municípios pequenos. Para a demonstração, preferir um único ano; na opção acumulada, a taxa exibida é soma das taxas anuais.
+
+11. Cobertura × sarampo: evolução por localidade
+O exemplo reproduz os dados usados na aplicação para Porto Alegre. Explicar cada eixo antes de interpretar coincidências entre as curvas e as barras. Para cada localidade escolhida, a tela apresenta um gráfico. A sobreposição temporal permite exploração; não demonstra causalidade nem eficácia individual da vacina.
+
+12. Comparação por situação de cobertura
+Mostrar primeiro a definição do recorte e o tamanho dos grupos. A defasagem permite usar a cobertura de até dois anos antes dos casos. O filtro municipal de população mínima altera quais localidades entram na comparação. A correlação de Spearman e a dispersão ficam nos detalhes: são descritivas e não controlam fatores de confusão. Não apresentar associação ecológica como efeito causal.
+
+13. Página Ficha do município
+Escolher um município e o ano. Os valores ilustram uma seleção real do banco do artigo, não são indicadores novos. Primeiro mostrar os cartões do ano; depois a série anual e a tabela. A ficha reúne os diferentes recortes municipais sem exigir uma troca de página para as doses mensais.
+
+14. Doses mensais dentro da ficha do município
+O gráfico mensal permanece na Ficha do município; não há página independente de doses mensais. As aplicações registradas incluem todas as idades, por isso não são o mesmo numerador da cobertura da população-alvo. Para 2026, a série de aplicações tem corte diferente da série de cobertura. O Excel da ficha contém abas anual e mensal.
+
+15. Página Dados e metodologia
+Usar esta página para esclarecer o significado de um indicador ou uma mudança de fonte. Há seis abas, com documentação das fontes, modelo e procedimentos. A apresentação mostra a função das abas sem exibir código. O processamento lê os arquivos locais disponibilizados; não corresponde a uma coleta automática em tempo real.
+
+16. Exportação e sequência de consulta
+Demonstrar um percurso simples. Na tabela municipal de cobertura, selecionar uma dose e o grupo abaixo da meta; anotar um município para abrir na ficha. Observar a evolução anual e as aplicações mensais antes de exportar. As tabelas têm downloads CSV/Excel; os gráficos podem ser salvos como PNG pela ferramenta da câmera e como HTML interativo. A exportação integral da ficha reúne duas abas no Excel.
+
+17. Cuidados na interpretação das consultas
+Evitar comparar um ano parcial diretamente com anos completos. Na cobertura, a população-alvo difere da população residente usada na incidência. A série muda de fonte em 2023. Os dois métodos anuais são alternativas analíticas do projeto, sem equivalência metodológica integral comprovada com o painel oficial. As diferenças entre registros de vigilância e balanços oficiais também estão descritas no artigo.
+
+18. Referências: vacinação e proteção coletiva
+As referências estão vinculadas aos respectivos títulos. A explicação da introdução é uma síntese dessas fontes, sem reproduzir figuras institucionais.
+
+19. Referências: dados e documentação
+As fontes de vacinação e vigilância são integradas pelo código IBGE da localidade e pelo ano. O artigo e a página de metodologia descrevem o recorte e as escolhas de cálculo. Os números mostrados nos exemplos foram extraídos do material complementar do artigo.

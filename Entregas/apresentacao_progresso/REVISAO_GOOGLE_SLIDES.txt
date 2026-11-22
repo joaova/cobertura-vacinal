@@ -1,0 +1,41 @@
+APRESENTAÇÃO REVISADA DO DASHBOARD — 22/11/2026
+
+Google Slides nativo, na pasta ProjetoBD do Drive:
+https://docs.google.com/presentation/d/12mHlmvi2--IQCYzjJJPI0kV1SruTafBgSL8rPvp1Fls/edit
+
+19 slides em 16:9: 17 de conteúdo e 2 de referências com links.
+
+Alterações em relação à apresentação anterior:
+- Linguagem objetiva e títulos descritivos.
+- Introdução ampliada sobre vacinação, meta de 95%, duas doses e imunidade coletiva.
+- Percurso pelas seis páginas oficiais, com explicação de filtros e gráficos.
+- Exemplos numéricos usados para demonstrar as consultas.
+- Remoção da seção de testes e do enfoque em resultados e validação técnica.
+- Sequência sugerida para demonstrar a navegação e as exportações.
+
+Os textos, cartões, formas e o diagrama de imunidade coletiva são elementos
+nativos editáveis. Os quatro gráficos são imagens incorporadas; seus dados
+estão nos CSVs do artigo e as figuras podem ser regeneradas em Python.
+Não se trata de um PDF colocado como imagem de fundo dos slides.
+
+Arquivos locais:
+- apresentacao_dashboard_revisada.pptx: fonte editável usada na conversão.
+- apresentacao_dashboard_revisada.pdf: exportação da versão final do Google Slides.
+- roteiro_dashboard_revisado.txt: notas para a apresentação.
+- revisar_para_drive.py: gerador dos slides revisados.
+- manifesto_revisado.json: conteúdo e hashes dos arquivos locais.
+- google_slides.json: identificação do arquivo nativo e registro da conversão.
+
+O gerador usa gerar_apresentacao.py como biblioteca e as imagens existentes
+em figuras/. Para recriar as cópias locais, executar na raiz do repositório:
+    python Entregas/apresentacao_progresso/revisar_para_drive.py
+
+Essa execução produz PDF local a partir do mesmo conteúdo, sem sincronizar
+o Google Slides. O PDF entregue foi posteriormente substituído pela exportação
+nativa do Drive, para corresponder à apresentação na nuvem.
+
+Fontes da introdução: OMS e Ministério da Saúde, verificadas em 22/11/2026.
+Os gráficos e valores municipais vêm do material complementar do artigo.
+As figuras ilustram as consultas e não são capturas da interface do Streamlit.
+O Streamlit, o banco e os dados brutos não foram alterados nesta revisão.
+As versões anteriores foram preservadas. Nenhum commit foi realizado.

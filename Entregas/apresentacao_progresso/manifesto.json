@@ -1,0 +1,20 @@
+{
+  "slides": 19,
+  "conteudo": 17,
+  "referencias": 2,
+  "fonte": "../artigo_atualizado/artigo.pdf",
+  "recorte": "2026-11-22",
+  "formato": "16:9",
+  "sha256_artigo": "c25576636780688a505b5b7fdd211806275e7c5415746b84f9a46356521f7df2",
+  "sha256_dados": {
+    "serie_brasil_rs_poa.csv": "ba1d1e06ea25081b31a76aaf2c7e4a39eb19a2f64187137366b46183abb16bc1",
+    "doses_mensais_poa.csv": "12655fe622712c92cbe711a732828804c2642f038784c2c18fb001bce8e4145a",
+    "exemplos_municipais_2019.csv": "0dfafb1675e5c69e3a7e394438cb198ad93442376fa2b951273cd3c13993f5f5",
+    "sensibilidade_metodos.csv": "0a113644ff75a4846686f22aed10366a9b8c85d014950570c05f0f4125d56358",
+    "comparacao_grupos_2019.csv": "50b9e51f6175cf8461f2a2dc0483d6cf90cab6b8777c8256399ec7ee1be82602"
+  },
+  "texto_editavel": true,
+  "notas_do_apresentador": true,
+  "observacao": "Gráficos derivados dos CSVs do artigo. Não são capturas da interface.",
+  "checagem_caixas_texto": "Sem excesso de altura ou elementos fora da área do slide."
+}

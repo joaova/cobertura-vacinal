@@ -1,0 +1,9 @@
+{
+  "banco": "db/projeto_sarampo_vacina.db",
+  "sha256_banco": "6858f245b6a3653743c200fa2429478860e8132b236b2250dfc3c812ffde6bbc",
+  "data_revisao": "2026-11-22",
+  "matplotlib_figuras": "3.11.2",
+  "arquivo_figuras": "gerar_figuras.py",
+  "metodo_figura_cobertura": "media_mensal",
+  "observacao": "Gráficos autorais derivados do banco; não são capturas da interface."
+}
