@@ -51,16 +51,16 @@ with aba1:
 
 # ---------------------------------------------------------------- CB2
 with aba2:
+    st.subheader("Cobertura da 1ª e da 2ª dose por UF")
     f1, f2 = st.columns([2, 3])
     with f1:
-        ini2, fim2 = st.slider("Período (média dos anos)", config.ANO_INICIAL, config.ANO_FINAL,
-                               (2019, 2025), key="cb2_anos")
-        st.caption("A cobertura de cada UF é a média simples dos anos do período.")
+        ano2 = st.selectbox("Ano", options=config.ANOS, index=config.ANOS.index(2025), key="cb2_ano")
+        st.caption("Compare a cobertura da 1ª e da 2ª dose em cada UF no ano selecionado.")
     with f2:
         regioes = st.multiselect("Regiões", ["Norte", "Nordeste", "Sudeste", "Sul", "Centro-Oeste"],
                                  default=["Norte", "Nordeste", "Sudeste", "Sul", "Centro-Oeste"], key="cb2_reg")
         ordem = st.radio("Ordenar por", ["Diferença D1 − D2", "D1", "D2", "UF"], horizontal=True, key="cb2_ord")
-    df2 = c.dados("cb2_d1_vs_d2_por_uf", metodo=metodo, ano_ini=ini2, ano_fim=fim2)
+    df2 = c.dados("cb2_d1_vs_d2_por_uf", metodo=metodo, ano_ini=ano2, ano_fim=ano2)
     df2 = df2[df2.regiao.isin(regioes)]
     chave = {"Diferença D1 − D2": ("diferenca", False), "D1": ("media_d1", False),
              "D2": ("media_d2", False), "UF": ("sigla_uf", True)}[ordem]
@@ -72,13 +72,13 @@ with aba2:
         fig.add_bar(x=df2.sigla_uf, y=df2.media_d1, name="D1", marker_color=c.COR_D1)
         fig.add_bar(x=df2.sigla_uf, y=df2.media_d2, name="D2", marker_color=c.COR_D2)
         c.linha_meta(fig)
-        fig.update_layout(barmode="group", title=f"Cobertura média por UF, {ini2}–{fim2} (%)",
+        fig.update_layout(barmode="group", title=f"Cobertura da 1ª e da 2ª dose por UF — {ano2} (%)",
                           yaxis=dict(title="Cobertura (%)"))
         c.mostrar_figura(fig, "cb2_d1_vs_d2_uf", "cb2")
-        if ini2 <= config.ANO_FINAL <= fim2:
+        if ano2 == config.ANO_FINAL:
             st.warning(c.AVISOS["parcial"])
         tab2 = df2.rename(columns={"sigla_uf": "UF", "nome_localidade": "Nome", "regiao": "Região",
-                                   "media_d1": "D1 média (%)", "media_d2": "D2 média (%)",
+                                   "media_d1": "D1 (%)", "media_d2": "D2 (%)",
                                    "diferenca": "D1 − D2 (p.p.)"})
         c.mostrar_tabela(tab2, "cb2_d1_vs_d2_uf", "cb2_t")
     c.mostra_sql("CB2")
@@ -99,9 +99,9 @@ with aba3:
     c.mostrar_figura(fig, "cb4_municipios_meta", "cb4")
     c.mostra_sql("CB4", dose=dose)
 
-    st.subheader("Tabela de municípios (para as UBS)")
+    st.subheader("Tabela de municípios")
     t1, t2, t3 = st.columns(3)
-    ano4 = t1.select_slider("Ano", options=config.ANOS, value=2025, key="cb4_ano")
+    ano4 = t1.selectbox("Ano", options=config.ANOS, index=config.ANOS.index(2025), key="cb4_ano")
     busca = t2.text_input("Buscar município", key="cb4_busca", placeholder="ex.: Porto Alegre")
     situacao = t3.radio("Situação", ["Todos", "Abaixo da meta", "Na meta", "Sem dado na fonte"],
                         horizontal=True, key="cb4_sit")
@@ -126,7 +126,9 @@ with aba3:
                 tab4 = tab4[tab4[col_cob] >= config.META_COBERTURA]
     if ano4 == config.ANO_FINAL:
         st.warning(c.AVISOS["parcial"])
-    st.caption(f"{len(tab4)} município(s). Coberturas acima de 100% podem ocorrer (doses em população-alvo "
+    contagem, _ = st.columns([1, 3])
+    contagem.metric("Municípios no filtro", c.fmt_num(len(tab4)), border=True)
+    st.caption("Coberturas acima de 100% podem ocorrer (doses em população-alvo "
                "estimada menor que a atendida) e em municípios pequenos oscilam bastante.")
     tab4 = tab4.rename(columns={"cod_ibge": "Cód. IBGE", "nome_localidade": "Município", "ano": "Ano",
                                 "cobertura_d1": "D1 (%)", "cobertura_d2": "D2 (%)", "doses_d1": "Doses D1",

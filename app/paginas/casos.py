@@ -17,7 +17,7 @@ nivel_rot = f1.radio("Nível geográfico", list(NIVEIS), key="cb3_nivel")
 nivel = NIVEIS[nivel_rot]
 modo = f2.radio("Período", ["Ano específico", "Acumulado no intervalo"], key="cb3_modo")
 if modo == "Ano específico":
-    ano = f3.select_slider("Ano", options=config.ANOS, value=2019, key="cb3_ano")
+    ano = f3.selectbox("Ano", options=config.ANOS, index=config.ANOS.index(2019), key="cb3_ano")
     ini = fim = ano
 else:
     ini, fim = f3.slider("Intervalo de anos", config.ANO_INICIAL, config.ANO_FINAL, (2018, 2020), key="cb3_int")
@@ -56,9 +56,9 @@ if df.empty:
     st.info("Nenhum registro com esses filtros.")
 else:
     k = st.columns(3)
-    k[0].metric("Localidades com casos", c.fmt_num(df.cod_ibge.nunique()))
-    k[1].metric("Casos no filtro", c.fmt_num(df.casos_inicio_exantema.sum()))
-    k[2].metric("Maior incidência (por 100 mil)", c.fmt_num(df.incidencia_100k.max(), 2))
+    k[0].metric("Localidades com casos", c.fmt_num(df.cod_ibge.nunique()), border=True)
+    k[1].metric("Casos no filtro", c.fmt_num(df.casos_inicio_exantema.sum()), border=True)
+    k[2].metric("Maior incidência (por 100 mil)", c.fmt_num(df.incidencia_100k.max(), 2), border=True)
 
     d = topo.iloc[::-1]
     fig = make_subplots(rows=1, cols=2, shared_yaxes=True, horizontal_spacing=0.04,

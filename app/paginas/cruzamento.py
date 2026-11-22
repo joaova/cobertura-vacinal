@@ -6,6 +6,7 @@ import streamlit as st
 
 import common as c
 from vacina_sarampo import config, estatistica
+from vacina_sarampo.contexto_epidemiologico import CONTEXTOS, DATA_CONSULTA
 
 c.exige_banco()
 metodo = c.metodo_atual()
@@ -69,67 +70,161 @@ with aba1:
 # ------------------------------------------------------------------ relação exploratória
 with aba2:
     st.markdown("""
-Esta aba **explora** a associação entre a cobertura vacinal e a incidência de sarampo. É uma análise
-**descritiva e ecológica** (unidades = localidades/anos): não estabelece causalidade e deve ser lida com as
-ressalvas abaixo.
+Compare a incidência de sarampo entre localidades **abaixo da meta de cobertura de 95%** e localidades
+com **95% ou mais**, no ano selecionado. Esta comparação é descritiva e não demonstra causalidade.
 """)
-    r1, r2, r3, r4 = st.columns(4)
+    r1, r2, r3 = st.columns(3)
     nivel_r = r1.radio("Unidades", ["UFs", "Municípios do RS"], key="rel_nivel")
     dose_r = r2.radio("Dose", ["D1", "D2"], horizontal=True, key="rel_dose")
-    lag = r3.selectbox("Defasagem da cobertura (anos)", [0, 1, 2], key="rel_lag",
-                       help="0 = cobertura e incidência no mesmo ano. 1 = cobertura do ano anterior.")
-    ini_r, fim_r = r4.slider("Anos da incidência", config.ANO_INICIAL + 2, config.ANO_FINAL, (2018, 2025), key="rel_anos")
+    ano_r = r3.selectbox("Ano dos casos", config.ANOS, index=config.ANOS.index(2025), key="rel_ano")
     tipo_r = "UF" if nivel_r == "UFs" else "MUNICIPIO"
+    with st.expander("Opções da comparação"):
+        lag = st.selectbox("Defasagem da cobertura (anos)",
+                           [d for d in (0, 1, 2) if ano_r - d >= config.ANO_INICIAL], key="rel_lag",
+                           help="0 = cobertura e casos no mesmo ano. 1 ou 2 = cobertura de um ou dois anos antes.")
+        pop_min = 0
+        if tipo_r == "MUNICIPIO":
+            pop_min = st.number_input("População mínima do município", 0, 2_000_000, 5000, step=1000, key="rel_pmin",
+                                      help="Restringe a comparação aos municípios com pelo menos esta população.")
+    ano_cobertura = ano_r - lag
     df = c.dados("relacao_cobertura_incidencia", tipo=tipo_r, dose=dose_r, lag=lag, metodo=metodo,
-                 ano_ini=ini_r, ano_fim=fim_r)
-    if tipo_r == "MUNICIPIO":
-        pop_min = st.number_input("População mínima do município", 0, 2_000_000, 5000, step=1000, key="rel_pmin",
-                                  help="Municípios pequenos geram incidências muito instáveis.")
-        df = df[df.populacao_ibge >= pop_min]
-    res = estatistica.spearman(df["cobertura"], df["incidencia_100k"])
-    com_casos = df[df.casos > 0]
-    res_c = estatistica.spearman(com_casos["cobertura"], com_casos["incidencia_100k"])
+                 ano_ini=ano_r, ano_fim=ano_r)
+    df = df.dropna(subset=["cobertura", "casos", "populacao_ibge"])
+    df = df[(df.populacao_ibge > 0) & (df.populacao_ibge >= pop_min)]
+    st.caption(f"Cobertura {dose_r} de {ano_cobertura} e casos por início do exantema em {ano_r}. "
+               "São consideradas apenas localidades com cobertura, casos e população válida informados.")
+    if ano_r == config.ANO_FINAL:
+        st.warning(c.AVISOS["parcial"])
 
-    k = st.columns(4)
-    k[0].metric("Pares localidade-ano", c.fmt_num(res.n))
-    k[1].metric("ρ de Spearman (todos)", c.fmt_num(res.rho, 3) if res.rho is not None else "—",
-                help="Correlação de postos entre cobertura e incidência (inclui os pares sem casos).")
-    k[2].metric("ρ (apenas com casos)", c.fmt_num(res_c.rho, 3) if res_c.rho is not None else "—",
-                help=f"n = {res_c.n}")
-    k[3].metric("p-valor (todos)", "—" if res.p_valor is None else ("< 0,001" if res.p_valor < 0.001 else c.fmt_num(res.p_valor, 3)))
-    if res.rho is not None:
-        ic = f" (IC95% aprox. {c.fmt_num(res.ic95[0], 2)} a {c.fmt_num(res.ic95[1], 2)})" if res.ic95 else ""
-        st.markdown(f"Associação **{estatistica.descreve_forca(res.rho)}** entre a cobertura {dose_r} "
-                    f"(ano t−{lag}) e a incidência (ano t){ic}.")
+    if df.empty:
+        st.info("Nenhuma localidade com dados válidos para os filtros selecionados.")
     else:
-        st.info("Dados insuficientes para calcular a correlação.")
+        resumo = estatistica.resumo_por_meta(df, config.META_COBERTURA)
+        grupos = resumo.situacao.tolist()
+        cores = {grupos[0]: c.COR_CASOS, grupos[1]: c.COR_META}
+        k = st.columns(3)
+        k[0].metric("Localidades analisadas", c.fmt_num(len(df)), border=True)
+        k[1].metric("Casos no ano", c.fmt_num(df.casos.sum()), border=True)
+        k[2].metric("Localidades com casos", c.fmt_num((df.casos > 0).sum()), border=True)
 
-    if not df.empty:
-        df = df.assign(ano_inc=df.ano_incidencia.astype(str))
-        fig = px.scatter(df, x="cobertura", y="incidencia_100k", color="ano_inc", hover_name="nome_localidade",
-                         hover_data={"casos": True, "populacao_ibge": ":,.0f", "ano_inc": False},
-                         labels={"cobertura": f"Cobertura {dose_r} (%) no ano t−{lag}", "incidencia_100k": "Incidência /100 mil",
-                                 "ano_inc": "Ano da incidência"}, log_y=False)
-        fig.add_vline(x=config.META_COBERTURA, line_dash="dot", line_color=c.COR_META)
-        fig.update_layout(title="Cobertura × incidência (cada ponto = localidade-ano)")
-        c.mostrar_figura(fig, "relacao_dispersao", "rel_sc", 480)
+        st.subheader(f"Incidência por situação de cobertura · {ano_r}")
+        st.caption("Incidência do grupo = total de casos ÷ população total × 100 mil. "
+                   "O cálculo considera o tamanho da população de cada localidade.")
+        if df.casos.sum() == 0:
+            st.info(f"Nenhum caso de sarampo registrado nas localidades selecionadas em {ano_r}. "
+                    "Não há variação de incidência para avaliar sua relação com a cobertura neste recorte.")
+        else:
+            fig = go.Figure(go.Bar(
+                x=resumo.situacao, y=resumo.incidencia_100k,
+                marker_color=[cores[g] for g in grupos],
+                text=[c.fmt_num(v, 2) if pd.notna(v) else "" for v in resumo.incidencia_100k],
+                textposition="outside", cliponaxis=False,
+                customdata=resumo[["localidades", "populacao", "casos", "localidades_com_casos"]].to_numpy(),
+                hovertemplate="%{x}<br>Incidência: %{y:.2f}/100 mil<br>Localidades: %{customdata[0]:,.0f}"
+                              "<br>População: %{customdata[1]:,.0f}<br>Casos: %{customdata[2]:,.0f}"
+                              "<br>Localidades com casos: %{customdata[3]:,.0f}<extra></extra>"))
+            fig.update_layout(title=f"Casos por 100 mil habitantes, segundo a cobertura {dose_r} de {ano_cobertura}",
+                              xaxis_title="Situação da cobertura", yaxis_title="Casos por 100 mil habitantes",
+                              yaxis=dict(rangemode="tozero"), showlegend=False)
+            c.mostrar_figura(fig, f"relacao_por_meta_{ano_r}_{dose_r}_cob{ano_cobertura}", "rel_bar", 400)
+        sem_localidades = resumo.loc[resumo.localidades == 0, "situacao"].tolist()
+        if sem_localidades:
+            st.caption(f"Sem localidades no grupo: {', '.join(sem_localidades)}. "
+                       "A incidência desse grupo não pode ser calculada; não é possível comparar os dois grupos.")
 
-        faixas = pd.cut(df.cobertura, [-np.inf, 70, 80, 90, 95, np.inf],
-                        labels=["< 70%", "70–80%", "80–90%", "90–95%", "≥ 95%"], right=False)
-        resumo = (df.assign(faixa=faixas).groupby("faixa", observed=True)
-                  .agg(pares=("casos", "size"), com_casos=("casos", lambda s: int((s > 0).sum())),
-                       casos=("casos", "sum"), incidencia_media=("incidencia_100k", "mean")).reset_index())
-        resumo["pct_com_casos"] = (100 * resumo.com_casos / resumo.pares).round(1)
-        resumo["incidencia_media"] = resumo.incidencia_media.round(2)
-        fig2 = go.Figure(go.Bar(x=resumo.faixa.astype(str), y=resumo.pct_com_casos, marker_color=c.COR_CASOS,
-                                text=resumo.pct_com_casos.map(lambda v: f"{v:.1f}%".replace(".", ",")),
-                                textposition="outside"))
-        fig2.update_layout(title="% de localidades-ano com ao menos 1 caso, por faixa de cobertura",
-                           yaxis_title="% com casos", xaxis_title=f"Faixa de cobertura {dose_r}")
-        c.mostrar_figura(fig2, "relacao_faixas", "rel_bar", 380)
-        c.mostrar_tabela(resumo.rename(columns={"faixa": "Faixa de cobertura", "pares": "Pares", "com_casos": "Com casos",
-                                                "casos": "Casos", "incidencia_media": "Incidência média /100 mil",
-                                                "pct_com_casos": "% com casos"}), "relacao_faixas", "rel_t")
+        st.subheader("Dados dos grupos")
+        tabela = resumo.rename(columns={"situacao": "Situação da cobertura", "localidades": "Localidades",
+                                         "populacao": "População", "casos": "Casos",
+                                         "localidades_com_casos": "Localidades com casos",
+                                         "incidencia_100k": "Incidência /100 mil"})
+        tabela["Incidência /100 mil"] = tabela["Incidência /100 mil"].round(2)
+        c.mostrar_tabela(tabela, f"relacao_por_meta_{ano_r}_{dose_r}_cob{ano_cobertura}", "rel_t")
+
+        with st.expander("Detalhes estatísticos"):
+            res = estatistica.spearman(df.cobertura, df.incidencia_100k)
+            com_casos = df[df.casos > 0]
+            res_c = estatistica.spearman(com_casos.cobertura, com_casos.incidencia_100k)
+            k = st.columns(4)
+            k[0].metric("Localidades com dados para correlação", c.fmt_num(res.n), border=True)
+            k[1].metric("ρ de Spearman (todos)", c.fmt_num(res.rho, 3) if res.rho is not None else "—", border=True)
+            k[2].metric("ρ (apenas com casos)", c.fmt_num(res_c.rho, 3) if res_c.rho is not None else "—",
+                        help=f"n = {res_c.n}; considera somente localidades com ao menos um caso.", border=True)
+            k[3].metric("p-valor (todos)", "—" if res.p_valor is None else (
+                "< 0,001" if res.p_valor < 0.001 else c.fmt_num(res.p_valor, 3)), border=True)
+            if res.rho is None:
+                st.info("Dados insuficientes ou sem variação para calcular a correlação.")
+            elif res.ic95:
+                st.caption(f"IC95% aproximado de Spearman: {c.fmt_num(res.ic95[0], 2)} a "
+                           f"{c.fmt_num(res.ic95[1], 2)}.")
+            if df.casos.sum() > 0:
+                pontos = df.assign(situacao=np.where(df.cobertura < config.META_COBERTURA, grupos[0], grupos[1]))
+                fig = px.scatter(pontos, x="cobertura", y="incidencia_100k", color="situacao",
+                                 color_discrete_map=cores, category_orders={"situacao": grupos},
+                                 hover_name="nome_localidade", hover_data={"casos": True, "populacao_ibge": ":,.0f"},
+                                 labels={"cobertura": f"Cobertura {dose_r} em {ano_cobertura} (%)",
+                                         "incidencia_100k": f"Incidência em {ano_r} /100 mil",
+                                         "situacao": "Situação da cobertura"})
+                fig.add_vline(x=config.META_COBERTURA, line_dash="dot", line_color=c.COR_META)
+                fig.update_layout(title="Cobertura × incidência (cada ponto = uma localidade)")
+                c.mostrar_figura(fig, "relacao_dispersao", "rel_sc", 480)
+
+    st.subheader(f"{'Municípios do RS' if tipo_r == 'MUNICIPIO' else 'UFs'} com casos em {ano_r}")
+    casos_locais = c.dados("cb3_ranking_casos", tipo=tipo_r, ano_ini=ano_r, ano_fim=ano_r, min_casos=1)
+    if casos_locais.empty:
+        st.info(f"Nenhuma localidade com casos registrada na base para este recorte em {ano_r}.")
+    else:
+        coberturas = c.dados("cb1_serie_cobertura", cods=casos_locais.cod_ibge.tolist(), metodo=metodo,
+                             ano_ini=ano_cobertura, ano_fim=ano_cobertura)
+        casos_locais = casos_locais.merge(coberturas[["cod_ibge", "cobertura_d1", "cobertura_d2"]],
+                                          on="cod_ibge", how="left")
+        casos_locais["Situação da cobertura selecionada"] = "Sem dado de cobertura"
+        cobertura_dose = casos_locais[f"cobertura_{dose_r.lower()}"]
+        casos_locais.loc[cobertura_dose < config.META_COBERTURA, "Situação da cobertura selecionada"] = "Abaixo de 95%"
+        casos_locais.loc[cobertura_dose >= config.META_COBERTURA, "Situação da cobertura selecionada"] = "95% ou mais"
+        casos_locais["Na comparação dos grupos"] = casos_locais.cod_ibge.isin(df.cod_ibge).map({True: "Sim", False: "Não"})
+        casos_locais["Ano da cobertura"] = ano_cobertura
+        casos_locais = casos_locais.sort_values(["casos_inicio_exantema", "nome_localidade"], ascending=[False, True])
+        tabela_casos = casos_locais.rename(columns={
+            "nome_localidade": "Município" if tipo_r == "MUNICIPIO" else "Estado / DF", "sigla_uf": "UF",
+            "ano": "Ano dos casos", "casos_inicio_exantema": "Casos", "incidencia_100k": "Incidência /100 mil",
+            "populacao_ibge": "População", "cobertura_d1": "D1 (%)", "cobertura_d2": "D2 (%)",
+        })
+        tabela_casos["Incidência /100 mil"] = tabela_casos["Incidência /100 mil"].round(2)
+        tabela_casos = tabela_casos[["Município" if tipo_r == "MUNICIPIO" else "Estado / DF", "UF", "Ano dos casos",
+                                     "Casos", "Incidência /100 mil", "População", "Ano da cobertura", "D1 (%)", "D2 (%)",
+                                     "Situação da cobertura selecionada", "Na comparação dos grupos"]]
+        st.caption(f"Situação calculada para {dose_r} em {ano_cobertura}. A lista inclui todas as localidades "
+                   "com casos no recorte geográfico, inclusive aquelas sem cobertura informada ou fora do filtro "
+                   "de população mínima; a última coluna indica quais participam da comparação acima.")
+        c.mostrar_tabela(tabela_casos, f"localidades_com_casos_{tipo_r}_{ano_r}_{dose_r}_cob{ano_cobertura}", "rel_casos_t",
+                         column_config={"Ano dos casos": None, "Ano da cobertura": None})
+    if tipo_r == "UF":
+        st.caption("Para consultar cidades, selecione ‘Municípios do RS’. A base possui detalhamento municipal "
+                   "apenas para o Rio Grande do Sul; nas demais UFs, os registros estão agregados por estado.")
+
+    contexto = CONTEXTOS[ano_r]
+    st.subheader(f"Contexto epidemiológico de {ano_r} · Ministério da Saúde")
+    st.markdown(f"**{contexto.titulo}**")
+    fontes = " · ".join(f"[{f.titulo}]({f.url})" for f in contexto.fontes)
+    st.markdown(f"{contexto.resumo} Fontes: {fontes}.")
+    st.caption(f"Contexto nacional, com eventos investigados nas fontes citadas. Não determina a origem "
+               f"de cada caso da tabela nem muda com os filtros de dose, defasagem ou população. "
+               f"Fontes consultadas em {DATA_CONSULTA}.")
+    with st.expander("Comparar os totais do painel e do Ministério da Saúde"):
+        brasil = c.dados("ca1_cruzamento", cods=[config.COD_BRASIL], metodo=metodo, ano_ini=ano_r, ano_fim=ano_r)
+        total_painel = int(brasil.casos.sum())
+        st.caption(f"Brasil · {ano_r}")
+        painel, ministerio = st.columns(2)
+        painel.metric("Casos no banco do projeto", c.fmt_num(total_painel), border=True)
+        ministerio.metric("Casos confirmados · Ministério da Saúde", c.fmt_num(contexto.total_confirmado_brasil), border=True)
+        st.markdown(f"[Balanço do Ministério da Saúde]({contexto.fonte_total}) · {contexto.recorte_total}.")
+        if total_painel != contexto.total_confirmado_brasil:
+            st.info("Os totais divergem e ainda não foram reconciliados. A tabela usa os arquivos do projeto; "
+                    "o contexto cita o balanço oficial. A diferença, por si só, não permite concluir sua causa.")
+        if ano_r == config.ANO_FINAL:
+            st.caption("Os casos de 2026 do projeto têm extração até setembro; o balanço citado foi publicado em 17 de novembro. "
+                       "Os dois recortes são parciais e têm datas de corte diferentes.")
+
     with st.expander("⚠ Como interpretar (limitações)"):
         st.markdown("""
 - **Ecológico, não causal:** compara localidades inteiras; não informa o estado vacinal de quem adoeceu.
@@ -139,6 +234,7 @@ ressalvas abaixo.
 - **Coortes diferentes:** a cobertura refere-se à população-alvo infantil do ano, enquanto a incidência considera todas as idades.
 - **Defasagem:** a imunidade coletiva reflete coberturas acumuladas de vários anos; teste defasagens de 1 e 2 anos.
 - **Municípios pequenos e 2026 parcial** distorcem taxas; use a população mínima e evite incluir 2026.
-- Os p-valores desconsideram a dependência entre anos da mesma localidade e devem ser lidos apenas como referência.
+- Os grupos podem ter populações e perfis diferentes. As taxas não são ajustadas por idade ou outros fatores.
+- P-valores e intervalos são exploratórios e não ajustam a dependência espacial entre localidades.
 """)
     c.mostra_sql("CORR", dose=dose_r)

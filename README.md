@@ -38,7 +38,7 @@ app/
   main.py                   navegação e configuração global
   common.py                 acesso a dados com cache, exportação, avisos metodológicos
   paginas/                  Visão geral · Cobertura · Casos e incidência · Cobertura × sarampo ·
-                            Doses mensais · Ficha do município (UBS) · Dados e metodologia
+                            Ficha do município (UBS) · Dados e metodologia
 tests/                      pytest (valores de referência = Tabelas 1 e 4 do artigo)
 ```
 
@@ -47,14 +47,22 @@ tests/                      pytest (valores de referência = Tabelas 1 e 4 do ar
 | Página | Conteúdo | Origem no artigo |
 |---|---|---|
 | Visão geral | Indicadores do ano escolhido, evolução D1/D2 × casos, leitura rápida | Tabela 4 |
-| Cobertura vacinal | Série histórica de qualquer localidade (CB1), D1 × D2 por UF (CB2), municípios do RS dentro/fora da meta + tabela filtrável (CB4) | CB1, CB2, CB4 |
+| Cobertura vacinal | Série histórica de qualquer localidade (CB1), D1 × D2 por UF no ano selecionado (CB2), municípios do RS dentro/fora da meta + tabela filtrável (CB4) | CB1, CB2, CB4 |
 | Casos e incidência | Ranking de municípios/UFs por incidência ou casos, ano específico ou acumulado, filtros de população mínima e nº de casos (CB3) | CB3 |
-| Cobertura × sarampo | Gráfico de eixo duplo por localidade (CA1) e relação exploratória cobertura × incidência (Spearman, defasagens, faixas) | CA1 |
-| Doses mensais | Sazonalidade **com uma linha por ano**, mapa de calor e variação vs. ano-base (CA2) | CA2 |
-| Ficha do município | Resumo para as UBS: município × RS × Brasil, posição no estado, download em Excel | PET-Saúde Digital |
+| Cobertura × sarampo | Gráfico de eixo duplo por localidade (CA1), incidência por situação de cobertura, localidades com casos e contexto anual com fontes do Ministério da Saúde | CA1 |
+| Ficha do município | Resumo para as UBS: cobertura, casos, incidência, séries anuais e gráfico de doses mensais por ano; download em Excel | PET-Saúde Digital / CA2 |
 | Dados e metodologia | Manifesto das fontes (hash, data de extração), diagrama ER, dicionário, log de qualidade, limitações, versões, SQL | Seções 2–4 |
 
 Todas as tabelas têm botões **CSV/Excel** e todos os gráficos têm **PNG** (ícone da câmera) e **HTML interativo**.
+
+A página independente de doses mensais foi removida; o gráfico mensal permanece na ficha do município.
+O cache acompanha caminho, identificação do arquivo, modificação em nanossegundos e tamanho do banco.
+Após uma atualização ou reconstrução pelo ETL, consultas, catálogo de localidades e conexão SQLite são renovados.
+
+Na relação exploratória, a lista de localidades com casos inclui também aquelas excluídas da comparação por
+população mínima ou falta de cobertura, com indicação na tabela. O contexto de cada ano (2015–2026) resume
+publicações do Ministério da Saúde consultadas em 22/11/2026, com links e datas dos balanços. Os totais oficiais
+e os do banco são apresentados separadamente quando divergem; essas diferenças ainda não foram reconciliadas.
 
 ## Modelo de dados
 
@@ -91,14 +99,14 @@ Desvios/extensões em relação ao artigo (marcados `[EXT]` em `schema.sql`):
 | (1) Exportar tabelas/gráficos para os preceptores | CSV/Excel em todas as tabelas, PNG/HTML nos gráficos e ficha do município em Excel |
 | (2) Estimar doses 2015–2022 | **Não implementado**: exigiria supor a população-alvo de anos sem esse dado. Fica como evolução (ver abaixo) |
 | (2) Expandir detalhe municipal a outras UFs | Os dados atuais só trazem municípios do RS; o ETL já usa `UF_MUNICIPAL` em `config.py`, mas precisa de novos arquivos |
-| (2) Análise estatística entre cobertura e incidência | Aba “Relação exploratória”: Spearman (todos os pares e só com casos), p-valor, IC aproximado, defasagem de 0–2 anos, faixas de cobertura e lista de limitações |
+| (2) Análise estatística entre cobertura e incidência | Aba “Relação exploratória”: comparação anual abaixo de 95% × 95% ou mais, incidência calculada por total de casos ÷ população total, tabela dos grupos, defasagem de 0–2 anos e detalhes com dispersão, Spearman, p-valor e IC aproximado |
 | (3) Versões das bibliotecas | `requirements.txt` (fixado), `requirements-lock.txt` e tabela de versões na página *Dados e metodologia* |
 | (3) Como/quando os dados foram obtidos | Tabela `FONTE_ARQUIVO`: arquivo, linhas, SHA-256, data de modificação e data de extração informada pela fonte (SEIDIGI: 23/10/2026; TABNET: set/2026) |
 | (3) “Exantema” ≠ “sintomas” | Terminologia “ano de início do exantema” em toda a interface e aviso explicativo |
 | (3) Limitação da população 2025 → 2026 e dados incompletos de 2026 | Avisos, coluna `populacao_estimada`/`periodo_parcial` e marcação visual |
 | (3) “Correlação” no título | A interface usa “cruzamento” e “relação”; a análise estatística é rotulada como exploratória e ecológica |
 | (3) Figura 1 pequena | O diagrama ER está em tela cheia na aba *Modelo relacional* |
-| (4) Doses mensais separadas por ano | Página *Doses mensais*: uma linha por ano, mapa de calor, variação % vs. ano-base |
+| (4) Doses mensais separadas por ano | Gráfico na *Ficha do município*: uma linha por ano, separado por dose |
 | (5) Vários filtros | Filtros de localidades, período, dose, região, população mínima, nº de casos, busca por nome, faixa de cobertura, situação frente à meta e escopo |
 
 ## Limitações conhecidas / próximos passos

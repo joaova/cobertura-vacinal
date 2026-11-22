@@ -11,8 +11,8 @@ from vacina_sarampo import config
 c.exige_banco()
 metodo = c.metodo_atual()
 
-st.title("Ficha do município (apoio às UBS)")
-st.caption("Resumo de um município do RS comparado ao estado e ao Brasil, com exportação para uso dos preceptores.")
+st.title("Ficha do município")
+st.caption("Cobertura vacinal, casos de sarampo e doses aplicadas no município selecionado, com exportação da ficha.")
 c.aviso("parcial", "pop2026", "doses", "pequenos", "exantema")
 
 loc = c.localidades()
@@ -21,32 +21,18 @@ por_cod = dict(zip(muns.cod_ibge, muns.nome_localidade))
 cod = st.selectbox("Município", list(por_cod), index=list(por_cod).index(config.COD_POA),
                    format_func=lambda x: por_cod[x], key="mun_sel")
 nome = por_cod[cod]
-ano = st.select_slider("Ano de referência", options=config.ANOS, value=2025, key="mun_ano")
+ano = st.selectbox("Ano de referência", options=config.ANOS, index=config.ANOS.index(2025), key="mun_ano")
 
-df = c.dados("ca1_cruzamento", cods=[cod, config.COD_RS, config.COD_BRASIL], metodo=metodo,
+df = c.dados("ca1_cruzamento", cods=[cod], metodo=metodo,
              ano_ini=config.ANO_INICIAL, ano_fim=config.ANO_FINAL)
-rs_tab = c.dados("cb4_tabela_municipios", ano=ano, metodo=metodo)
-m = df[(df.cod_ibge == cod) & (df.ano == ano)].iloc[0]
-rs = df[(df.cod_ibge == config.COD_RS) & (df.ano == ano)].iloc[0]
-br = df[(df.cod_ibge == config.COD_BRASIL) & (df.ano == ano)].iloc[0]
+m = df[df.ano == ano].iloc[0]
 
-
-def posicao(col):
-    s = rs_tab[col].dropna()
-    v = rs_tab.loc[rs_tab.cod_ibge == cod, col].iloc[0]
-    return (int((s > v).sum()) + 1, len(s)) if pd.notna(v) else (None, len(s))
-
-
-p1, n1 = posicao("cobertura_d1")
-p2, n2 = posicao("cobertura_d2")
+st.subheader(f"{nome} · {ano}")
 k = st.columns(4)
-k[0].metric(f"{nome} · D1", c.fmt_pct(m.cobertura_d1), delta=f"RS {c.fmt_pct(rs.cobertura_d1)} · Brasil {c.fmt_pct(br.cobertura_d1)}",
-            delta_color="off")
-k[1].metric(f"{nome} · D2", c.fmt_pct(m.cobertura_d2), delta=f"RS {c.fmt_pct(rs.cobertura_d2)} · Brasil {c.fmt_pct(br.cobertura_d2)}",
-            delta_color="off")
-k[2].metric("Posição no RS (D1 / D2)", f"{p1 or '—'}º / {p2 or '—'}º", delta=f"de {n1} municípios", delta_color="off")
-k[3].metric("Casos no ano (início do exantema)", c.fmt_num(m.casos), delta=f"incidência {c.fmt_num(m.incidencia_100k, 2)}/100 mil",
-            delta_color="off")
+k[0].metric("Cobertura D1", c.fmt_pct(m.cobertura_d1), border=True)
+k[1].metric("Cobertura D2", c.fmt_pct(m.cobertura_d2), border=True)
+k[2].metric("Casos no ano (início do exantema)", c.fmt_num(m.casos), border=True)
+k[3].metric("Incidência por 100 mil habitantes", c.fmt_num(m.incidencia_100k, 2), border=True)
 for dose, v in (("D1", m.cobertura_d1), ("D2", m.cobertura_d2)):
     if pd.notna(v):
         (st.success if v >= config.META_COBERTURA else st.warning)(
@@ -58,17 +44,15 @@ if ano == config.ANO_FINAL:
     st.info(c.AVISOS["parcial"])
 
 fig = go.Figure()
-for i, (cc, rot) in enumerate([(cod, nome), (config.COD_RS, "RS"), (config.COD_BRASIL, "Brasil")]):
-    g = df[df.cod_ibge == cc]
-    fig.add_scatter(x=g.ano, y=g.cobertura_d1, name=f"{rot} · D1", mode="lines+markers", line=dict(color=c.PALETA[i]))
-    fig.add_scatter(x=g.ano, y=g.cobertura_d2, name=f"{rot} · D2", mode="lines+markers", line=dict(color=c.PALETA[i], dash="dash"))
-g = df[df.cod_ibge == cod]
+g = df
+fig.add_scatter(x=g.ano, y=g.cobertura_d1, name="Cobertura D1", mode="lines+markers", line=dict(color=c.PALETA[0]))
+fig.add_scatter(x=g.ano, y=g.cobertura_d2, name="Cobertura D2", mode="lines+markers", line=dict(color=c.PALETA[1], dash="dash"))
 fig.add_bar(x=g.ano, y=g.casos, name=f"Casos em {nome} (eixo dir.)", marker_color="rgba(214,39,40,0.4)", yaxis="y2")
 c.linha_meta(fig)
 c.marca_ano_parcial(fig, config.ANO_INICIAL, config.ANO_FINAL)
 vals = pd.concat([df.cobertura_d1, df.cobertura_d2]).dropna()
 max_y = max(130.0, float(vals.max()) * 1.1 if len(vals) else 0.0)
-fig.update_layout(title=f"{nome} × RS × Brasil", yaxis=dict(title="Cobertura (%)", range=[0, max_y]),
+fig.update_layout(title=f"Evolução da cobertura vacinal e dos casos de sarampo em {nome}", yaxis=dict(title="Cobertura (%)", range=[0, max_y]),
                   yaxis2=dict(title="Casos", overlaying="y", side="right", showgrid=False, rangemode="tozero"),
                   xaxis=dict(dtick=1), hovermode="x unified")
 c.mostrar_figura(fig, f"ficha_{cod}", "mun_fig", 480)

@@ -119,6 +119,54 @@ def test_comparacao_criterios(con):
 
 
 # --------------------------------------------------------------------------- estatística
+def test_resumo_por_meta_pondera_populacao_e_inclui_limite():
+    dados = pd.DataFrame({
+        "cod_ibge": ["A", "B", "C", "D"],
+        "cobertura": [80, 94.99, 95, 120],
+        "casos": [10, 0, 3, 0],
+        "populacao_ibge": [1000, 9000, 2000, 1000],
+    })
+    resumo = estatistica.resumo_por_meta(dados, 95).set_index("situacao")
+    abaixo = resumo.loc["Abaixo de 95%"]
+    na_meta = resumo.loc["95% ou mais"]
+    # A média das incidências locais seria 500; o grupo tem 10 casos em 10 mil habitantes.
+    assert abaixo.incidencia_100k == pytest.approx(100)
+    assert na_meta.incidencia_100k == pytest.approx(100)
+    assert abaixo.localidades == na_meta.localidades == 2
+    assert abaixo.localidades_com_casos == na_meta.localidades_com_casos == 1
+    assert resumo.casos.sum() == 13
+    assert resumo.populacao.sum() == 13_000
+
+
+def test_resumo_por_meta_distingue_grupo_ausente_de_zero_casos():
+    dados = pd.DataFrame({"cod_ibge": ["A"], "cobertura": [95], "casos": [0], "populacao_ibge": [1000]})
+    resumo = estatistica.resumo_por_meta(dados, 95).set_index("situacao")
+    assert resumo.loc["Abaixo de 95%", "localidades"] == 0
+    assert pd.isna(resumo.loc["Abaixo de 95%", "incidencia_100k"])
+    assert resumo.loc["95% ou mais", "incidencia_100k"] == 0
+
+
+def test_resumo_por_meta_exclui_registros_sem_dados_validos():
+    dados = pd.DataFrame({
+        "cod_ibge": ["A", "B", "C", "D", "E", "F"],
+        "cobertura": [80, None, 90, 100, 95, 95],
+        "casos": [2, 10, None, 5, 4, 3],
+        "populacao_ibge": [1000, 1000, 1000, 0, None, -1],
+    })
+    resumo = estatistica.resumo_por_meta(dados, 95)
+    assert resumo.localidades.sum() == 1
+    assert resumo.casos.sum() == 2
+    assert resumo.populacao.sum() == 1000
+
+
+def test_resumo_por_meta_sem_localidades():
+    dados = pd.DataFrame(columns=["cod_ibge", "cobertura", "casos", "populacao_ibge"])
+    resumo = estatistica.resumo_por_meta(dados, 95)
+    assert len(resumo) == 2
+    assert resumo.localidades.eq(0).all()
+    assert resumo.incidencia_100k.isna().all()
+
+
 def test_spearman_monotono_perfeito():
     r = estatistica.spearman(pd.Series([1, 2, 3, 4, 5, 6]), pd.Series([10, 20, 30, 40, 50, 60]))
     assert r.rho == pytest.approx(1.0) and r.n == 6

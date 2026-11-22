@@ -20,7 +20,7 @@ st.set_page_config(page_title="Cobertura vacinal × Sarampo", page_icon="💉", 
 
 st.markdown("""
 <style>
-  div[data-testid="stMetricValue"] { font-size: 1.7rem; }
+  div[data-testid="stMetricValue"] { font-size: 1.5rem; }
   .bloco-nota { font-size: 0.85rem; color: #555; }
 </style>
 """, unsafe_allow_html=True)
@@ -32,8 +32,7 @@ paginas = [
     st.Page("paginas/cobertura.py", title="Cobertura vacinal", icon="💉", url_path="cobertura"),
     st.Page("paginas/casos.py", title="Casos e incidência", icon="🦠", url_path="casos"),
     st.Page("paginas/cruzamento.py", title="Cobertura × sarampo", icon="🔀", url_path="cruzamento"),
-    st.Page("paginas/doses_mensais.py", title="Doses mensais", icon="📅", url_path="doses-mensais"),
-    st.Page("paginas/municipio.py", title="Ficha do município (UBS)", icon="🏥", url_path="municipio"),
+    st.Page("paginas/municipio.py", title="Ficha do município", icon="🏥", url_path="municipio"),
     st.Page("paginas/dados.py", title="Dados e metodologia", icon="📚", url_path="dados"),
 ]
 pg = st.navigation(paginas)

@@ -26,20 +26,33 @@ SEPARADORES = ",."  # pt-BR em eixos e dicas do Plotly
 # ---------------------------------------------------------------------------
 # acesso a dados
 # ---------------------------------------------------------------------------
-@st.cache_resource(show_spinner=False)
+VersaoBanco = tuple[str, int, int, int]
+
+
+def db_versao() -> VersaoBanco:
+    """Identifica atualizações e substituições do arquivo feitas pelo ETL."""
+    caminho = config.CAMINHO_DB.resolve()
+    try:
+        info = caminho.stat()
+    except FileNotFoundError:
+        return (str(caminho), 0, 0, 0)
+    return (str(caminho), info.st_ino, info.st_mtime_ns, info.st_size)
+
+
+@st.cache_resource(show_spinner=False, max_entries=1)
+def _conexao(versao: VersaoBanco):
+    # A conexão também deve mudar: o ETL remove e recria o arquivo SQLite.
+    return consultas.conectar(Path(versao[0]))
+
+
 def get_con():
-    return consultas.conectar()
-
-
-def db_versao() -> float:
-    """mtime do banco: faz o cache de dados invalidar quando o ETL é reexecutado."""
-    return config.CAMINHO_DB.stat().st_mtime if config.CAMINHO_DB.exists() else 0.0
+    return _conexao(db_versao())
 
 
 @st.cache_data(show_spinner=False, max_entries=256)
-def q(nome: str, _v: float, **kwargs) -> pd.DataFrame:
+def q(nome: str, versao: VersaoBanco, **kwargs) -> pd.DataFrame:
     """Executa ``consultas.<nome>(con, **kwargs)`` com cache."""
-    return getattr(consultas, nome)(get_con(), **kwargs)
+    return getattr(consultas, nome)(_conexao(versao), **kwargs)
 
 
 def dados(nome: str, **kwargs) -> pd.DataFrame:
@@ -62,9 +75,9 @@ def rotulo_localidade(row) -> str:
     return f"{row.nome_localidade}{sufixo}"
 
 
-@st.cache_data(show_spinner=False)
-def mapa_localidades(_v: float) -> pd.DataFrame:
-    df = consultas.localidades(get_con())
+@st.cache_data(show_spinner=False, max_entries=1)
+def mapa_localidades(versao: VersaoBanco) -> pd.DataFrame:
+    df = consultas.localidades(_conexao(versao))
     df["rotulo"] = df.apply(rotulo_localidade, axis=1)
     return df
 

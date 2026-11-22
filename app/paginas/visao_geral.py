@@ -13,8 +13,8 @@ st.caption("Cruzamento de bases públicas de imunização (TABNET/SI-PNI e SEIDI
 
 c.aviso("parcial", "pop2026", "doses", "exantema", "metodo")
 
-ano = st.select_slider("Ano de referência dos indicadores", options=config.ANOS, value=2025,
-                       help="2026 é parcial; o padrão é o último ano completo.")
+ano = st.selectbox("Ano de referência dos indicadores", options=config.ANOS, index=config.ANOS.index(2025),
+                   help="2026 é parcial; o padrão é o último ano completo.")
 
 base = c.dados("ca1_cruzamento", cods=[config.COD_BRASIL, config.COD_RS, config.COD_POA], metodo=metodo,
                ano_ini=config.ANO_INICIAL, ano_fim=config.ANO_FINAL)
@@ -24,21 +24,21 @@ meta = c.dados("cb4_municipios_na_meta", dose="D1", metodo=metodo).set_index("an
 col = st.columns(5)
 col[0].metric("Brasil · D1", c.fmt_pct(a.loc[config.COD_BRASIL, "cobertura_d1"]),
               delta=f"{a.loc[config.COD_BRASIL, 'cobertura_d1'] - config.META_COBERTURA:+.1f} p.p. vs meta".replace(".", ","),
-              delta_color="normal")
+              delta_color="normal", border=True)
 col[1].metric("Brasil · D2", c.fmt_pct(a.loc[config.COD_BRASIL, "cobertura_d2"]),
-              delta=f"{a.loc[config.COD_BRASIL, 'cobertura_d2'] - config.META_COBERTURA:+.1f} p.p. vs meta".replace(".", ","))
-col[2].metric("RS · D1 / D2", f"{c.fmt_pct(a.loc[config.COD_RS, 'cobertura_d1'], 1)} / {c.fmt_pct(a.loc[config.COD_RS, 'cobertura_d2'], 1)}")
+              delta=f"{a.loc[config.COD_BRASIL, 'cobertura_d2'] - config.META_COBERTURA:+.1f} p.p. vs meta".replace(".", ","), border=True)
+col[2].metric("RS · D1 / D2", f"{c.fmt_pct(a.loc[config.COD_RS, 'cobertura_d1'], 1)} / {c.fmt_pct(a.loc[config.COD_RS, 'cobertura_d2'], 1)}", border=True)
 col[3].metric("Porto Alegre · D1 / D2",
-              f"{c.fmt_pct(a.loc[config.COD_POA, 'cobertura_d1'], 1)} / {c.fmt_pct(a.loc[config.COD_POA, 'cobertura_d2'], 1)}")
+              f"{c.fmt_pct(a.loc[config.COD_POA, 'cobertura_d1'], 1)} / {c.fmt_pct(a.loc[config.COD_POA, 'cobertura_d2'], 1)}", border=True)
 if ano in meta.index:
     col[4].metric("Municípios do RS na meta (D1)",
-                  f"{int(meta.loc[ano, 'municipios_na_meta'])} de {int(meta.loc[ano, 'municipios_com_dado'])}")
+                  f"{int(meta.loc[ano, 'municipios_na_meta'])} de {int(meta.loc[ano, 'municipios_com_dado'])}", border=True)
 
 col2 = st.columns(3)
 col2[0].metric("Casos de sarampo no Brasil (início do exantema)", c.fmt_num(a.loc[config.COD_BRASIL, "casos"]),
-               help="Inclui casos com UF de residência ignorada/exterior.")
-col2[1].metric("Incidência no Brasil (por 100 mil hab.)", c.fmt_num(a.loc[config.COD_BRASIL, "incidencia_100k"] if "incidencia_100k" in a else 0, 2))
-col2[2].metric("Casos no RS / Porto Alegre", f"{c.fmt_num(a.loc[config.COD_RS, 'casos'])} / {c.fmt_num(a.loc[config.COD_POA, 'casos'])}")
+               help="Inclui casos com UF de residência ignorada/exterior.", border=True)
+col2[1].metric("Incidência no Brasil (por 100 mil hab.)", c.fmt_num(a.loc[config.COD_BRASIL, "incidencia_100k"] if "incidencia_100k" in a else 0, 2), border=True)
+col2[2].metric("Casos no RS / Porto Alegre", f"{c.fmt_num(a.loc[config.COD_RS, 'casos'])} / {c.fmt_num(a.loc[config.COD_POA, 'casos'])}", border=True)
 if ano == config.ANO_FINAL:
     st.info(c.AVISOS["parcial"])
 

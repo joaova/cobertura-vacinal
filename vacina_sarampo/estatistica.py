@@ -8,6 +8,27 @@ import pandas as pd
 from scipy import stats
 
 
+def resumo_por_meta(dados: pd.DataFrame, meta: float) -> pd.DataFrame:
+    """Resume um registro por localidade em um único ano, ponderando pela população.
+
+    Registros sem cobertura, casos ou população válida não entram na comparação.
+    Grupos sem localidades têm incidência ausente, em vez de zero.
+    """
+    validos = dados.dropna(subset=["cobertura", "casos", "populacao_ibge"])
+    validos = validos[validos.populacao_ibge > 0]
+    grupos = [f"Abaixo de {meta:g}%", f"{meta:g}% ou mais"]
+    situacao = pd.Categorical(
+        np.where(validos.cobertura < meta, grupos[0], grupos[1]),
+        categories=grupos, ordered=True,
+    )
+    resumo = (validos.assign(situacao=situacao).groupby("situacao", observed=True)
+              .agg(localidades=("cod_ibge", "size"), populacao=("populacao_ibge", "sum"),
+                   casos=("casos", "sum"), localidades_com_casos=("casos", lambda s: int((s > 0).sum())))
+              .reindex(grupos, fill_value=0).reset_index())
+    resumo["incidencia_100k"] = 100_000 * resumo.casos / resumo.populacao.where(resumo.populacao > 0)
+    return resumo
+
+
 @dataclass
 class ResultadoSpearman:
     n: int
