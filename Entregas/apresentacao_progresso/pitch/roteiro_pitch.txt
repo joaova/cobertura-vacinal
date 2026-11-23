@@ -1,0 +1,43 @@
+PITCH DOS RESULTADOS PARCIAIS — 23/11/2026
+9 slides para 5 minutos + 1 slide de referências para apoio.
+Recorte documental e computacional dos dados: 22/11/2026.
+
+01. Cobertura vacinal e incidência de sarampo no RS
+0:00–0:20 (20s)
+Tempo: 20 segundos. Apresentamos os resultados parciais do projeto sobre cobertura da vacina tríplice viral e incidência de sarampo no Rio Grande do Sul, desenvolvido no contexto do PET-Saúde Digital. O trabalho integra dados públicos em um dashboard de consulta territorial e temporal.
+
+02. Motivação e contexto
+0:20–1:05 (45s)
+Tempo: 45 segundos. O Brasil perdeu o status de eliminação do sarampo em 2019, após a retomada da transmissão endêmica, e foi recertificado em 2024. Manter a eliminação exige acompanhamento da vacinação. A resistência à vacinação, incluindo hesitação e recusa, e a desinformação são desafios para a adesão. Médias regionais podem ocultar diferenças locais. Os dados de vacinação e sarampo estão em fontes distintas; integrá-los permite consultas territoriais por preceptores e equipes de UBS no PET-Saúde Digital.
+
+03. Objetivo do projeto
+1:05–1:35 (30s)
+Tempo: 30 segundos. O objetivo é integrar dados públicos de cobertura da vacina tríplice viral e incidência de sarampo, permitindo a análise conjunta por território e período. O foco está na vacinação e na ocorrência da doença; os dados populacionais dão suporte ao cálculo da incidência. Brasil e UFs oferecem contexto, enquanto os 497 municípios do RS têm detalhamento local. O apoio às equipes de saúde ainda será avaliado em uso real.
+
+04. Etapas de tratamento e integração
+1:35–2:10 (35s)
+Tempo: 35 segundos. Utilizamos dados agregados, exportados manualmente dos portais. O ETL lê o acervo local, padroniza arquivos, códigos IBGE e períodos, e carrega o SQLite. As consultas integram localidade e ano. Hash dos arquivos e log de qualidade mantêm a rastreabilidade. A série cobre 2015 a 2026, mas 2026 é parcial e não deve ser comparado diretamente com anos completos.
+
+05. Tecnologias utilizadas
+2:10–2:40 (30s)
+Tempo: 30 segundos. Python e pandas tratam os dados; openpyxl lê as planilhas. SQLite e SQL mantêm o banco e as consultas. Streamlit organiza a interface e Plotly fornece gráficos interativos. XlsxWriter exporta Excel, SciPy apoia a exploração, pytest verifica as regras e Git/GitHub versionam o projeto. O SQLite dispensa servidor dedicado na implementação local.
+
+06. Implementação do dashboard
+2:40–3:15 (35s)
+Tempo: 35 segundos. O resultado de implementação é um fluxo completo, do acervo à consulta. Integramos 70 arquivos e os 497 municípios gaúchos em sete tabelas. São seis páginas oficiais com filtros, tabelas exportáveis e gráficos interativos. Os 82 testes aprovados na verificação documentada demonstram consistência com as regras implementadas; não substituem validação epidemiológica ou avaliação com usuários.
+
+07. Cobertura da segunda dose em 2025
+3:15–3:50 (35s)
+Tempo: 35 segundos. No acervo de 2025, a cobertura da segunda dose foi 78,72% no Brasil, 84,62% no RS e 77,47% em Porto Alegre. Os três ficam abaixo da referência de 95%. A distância em Porto Alegre é de 17,53 pontos percentuais. Esses indicadores administrativos não medem diretamente a imunidade e ainda precisam de validação em relação à cobertura anual oficial.
+
+08. Validação e avaliação do dashboard
+3:50–4:20 (30s)
+Tempo: 30 segundos. A integração e a interface estão implementadas. Os próximos passos são validar os indicadores, reconciliar os casos com balanços oficiais, revisar o ranking acumulado de incidência e avaliar tarefas com preceptores. A publicação em nuvem também está pendente. Ainda não há resultados de satisfação, usabilidade ou impacto no serviço.
+
+09. Perspectivas futuras
+4:20–5:00 (40s)
+Tempo: 40 segundos. A perspectiva futura é passar do detalhamento municipal para as áreas de abrangência de cada UBS. Com dados compatíveis e territórios delimitados, o dashboard poderá mapear a cobertura, identificar áreas e grupos com menor cobertura e acompanhar sua evolução. A intenção é apoiar as equipes no planejamento de ações locais de vacinação. Essa funcionalidade ainda não está implementada e depende de acesso a dados com detalhamento territorial adequado e da validação com os serviços.
+
+10. Fontes e referências
+5:00–5:00 (0s)
+Slide de apoio, fora do tempo do pitch. As fontes oficiais fundamentam o contexto epidemiológico, a meta vacinal, a hesitação e a origem dos dados. Os valores exibidos podem ser conferidos nos CSVs do projeto. Nenhuma versão anterior da apresentação é utilizada como fonte. O tema Inf e os logotipos fornecidos foram preservados.

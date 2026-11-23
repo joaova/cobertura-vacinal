@@ -1,0 +1,58 @@
+PITCH DOS RESULTADOS PARCIAIS — 23/11/2026
+
+Versão atual: 9 slides para cerca de 5 minutos, mais 1 de referências de apoio.
+Ordem: motivação, objetivo, metodologia, tecnologias utilizadas, três slides de
+resultados parciais e encerramento com próximos passos. A capa abre o pitch.
+
+ARQUIVOS
+- apresentacao_pitch.pdf: versão Beamer para projeção, com o tema Inf original.
+- apresentacao_pitch_google_slides.pdf: exportação nativa da versão no Drive.
+- apresentacao_pitch.tex: conteúdo editável em LaTeX.
+- apresentacao_pitch.pptx: versão editável em PowerPoint, com notas nas 10 lâminas.
+- roteiro_pitch.txt: fala sugerida e intervalo de tempo de cada slide.
+- manifesto_pitch.json: fontes, hashes, recorte e dados da geração.
+- beamerthemeInf.sty e inf-logo-*.pdf: arquivos do template original, sem alterações.
+- fundos/: decoração, logotipo e gráficos sem o texto narrativo.
+- elementos_pitch.json: posições e estilos dos textos e notas usados no PPTX.
+
+TEMPLATE
+Utiliza o pacote completo colocado em ../Template_slides_inf_ufrgs/ pelo usuário,
+com a autoria de Bruno Menegola e os termos de licença indicados no tema.
+O template_slides.txt e o pacote fornecido foram preservados.
+Usa a opção Beamer aspectratio=169 para manter o formato 16:9 da apresentação.
+O fonte aplica um deslocamento de 14 pt no título do cabeçalho para evitar a
+sobreposição com o número grande da seção. O arquivo do tema não foi alterado.
+A configuração do português usa babelprovide, compatível com o TeX Live local.
+
+BASE DOS RESULTADOS
+O conteúdo deriva de ../../artigo_atualizado/ e dos respectivos CSVs, com recorte
+de 22/11/2026. A data de apresentação não representa atualização da base.
+Os valores de 2025 são o último ano completo do acervo. Os slides distinguem
+implementação, achados exploratórios e avaliação com usuários ainda pendente.
+Os 82 testes são a verificação documentada no artigo, sem nova execução do app.
+
+EDITABILIDADE
+O PDF é o resultado direto da compilação LaTeX, com a tipografia e o tema
+originais. No PPTX/Google Slides, o texto narrativo é nativo e editável; Arial
+é usada como alternativa portátil à Latin Modern do LaTeX. Figuras, logotipo
+e decoração são fundos sem texto narrativo. Os números dos resultados e as
+legendas são editáveis; a geometria das figuras pode ser alterada no LaTeX.
+Pequenas diferenças de espaçamento entre Beamer e a versão editável são esperadas.
+
+REPRODUÇÃO
+Na raiz de cobertura-vacinal:
+    python Entregas/apresentacao_progresso/gerar_pitch.py
+
+Requer as dependências Python do gerador anterior (Matplotlib e Pillow),
+TeX Live com Beamer/tema Inf, Poppler (pdftohtml e pdftocairo) e rsvg-convert.
+A geração é local e não sincroniza o Google Slides automaticamente.
+O script recompila o LaTeX, extrai textos e figuras e gera PPTX, roteiro e manifesto.
+Arquivos auxiliares e prévias são criados em /tmp/projetobd-pitch/build.
+
+As versões anteriores da apresentação foram preservadas.
+
+
+GOOGLE SLIDES
+https://docs.google.com/presentation/d/12mHlmvi2--IQCYzjJJPI0kV1SruTafBgSL8rPvp1Fls/edit?usp=drivesdk
+Mesmo arquivo nativo da apresentação anterior, atualizado para o pitch.
+10 slides com notas; texto narrativo editável; tema Inf e logotipos preservados.

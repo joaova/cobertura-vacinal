@@ -1,0 +1,183 @@
+% Pitch adaptado do main.tex e do template_slides.txt fornecidos.
+% Tema Inf original de Bruno Menegola, preservado sem alterações.
+\documentclass[aspectratio=169]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\babelprovide[main,import=pt-BR]{brazilian}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs,tikz}
+\usetikzlibrary{positioning,arrows.meta}
+\usetheme{Inf}
+% Ajuste de encaixe do cabeçalho em 16:9; o arquivo do tema permanece intacto.
+\makeatletter
+\patchcmd{\beamer@@tmpl@frametitle}
+ {\pgfpoint{0pt}{\InfOutterTitleBottomMargin}}
+ {\pgfpoint{14pt}{\InfOutterTitleBottomMargin}}{}
+ {\PackageError{pitch}{Nao foi possivel ajustar o cabecalho}{}}
+\makeatother
+\title[Cobertura vacinal e sarampo]{Cobertura vacinal e incidência de sarampo no RS}
+\subtitle{Pitch dos resultados parciais}
+\date{23 de novembro de 2026}
+\author{\scriptsize Gabriel Eichelberger Fontaneli\\João Villanova do Amaral\\Rafaele Castagnara Alves}
+\institute{Instituto de Informática --- UFRGS\\PET-Saúde Digital}
+\hypersetup{pdftitle={Cobertura vacinal e sarampo: pitch dos resultados parciais},pdfauthor={Gabriel Eichelberger Fontaneli; João Villanova do Amaral; Rafaele Castagnara Alves}}
+\newcommand{\fonte}[1]{\vfill{\tiny\color{InfGray}#1\par}}
+\newcommand{\destaque}[1]{{\color{InfRed}\bfseries #1}}
+\begin{document}
+\InfTitlePage
+
+\section{Motivação}
+\begin{frame}[t]{Motivação e contexto}
+\vspace{3mm}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.64\textwidth}
+\begin{itemize}\setlength{\itemsep}{2mm}
+ \item O Brasil perdeu o \textbf{status de eliminação do sarampo em 2019} e foi recertificado em 2024.
+ \item A \textbf{resistência à vacinação}, associada à hesitação e à desinformação, dificulta a adesão.
+ \item Médias regionais podem ocultar \textbf{diferenças locais}.
+ \item Dados de vacinação e sarampo estão em \textbf{fontes e formatos distintos}.
+\end{itemize}
+\end{column}
+\begin{column}{.29\textwidth}
+\centering\vspace{2mm}
+{\fontsize{36}{40}\selectfont\destaque{95\%}}\par
+\vspace{2mm}meta de cobertura da Tríplice Viral\par
+\vspace{6mm}\textbf{Acompanhamento territorial pelas equipes de UBS}
+\end{column}
+\end{columns}
+\fonte{Fontes: CEVS/SES-RS; OPAS (2024); Ministério da Saúde, manuais de vacinação (2024) e microplanejamento (2025).}
+\note{Tempo: 45 segundos. O Brasil perdeu o status de eliminação do sarampo em 2019, após a retomada da transmissão endêmica, e foi recertificado em 2024. Manter a eliminação exige acompanhamento da vacinação. A resistência à vacinação, incluindo hesitação e recusa, e a desinformação são desafios para a adesão. Médias regionais podem ocultar diferenças locais. Os dados de vacinação e sarampo estão em fontes distintas; integrá-los permite consultas territoriais por preceptores e equipes de UBS no PET-Saúde Digital.}
+\end{frame}
+
+\section{Objetivo}
+\begin{frame}[t]{Objetivo do projeto}
+\vspace{4mm}
+{\large Integrar dados públicos sobre a \textbf{cobertura da vacina tríplice viral} e a \textbf{incidência de sarampo} em um dashboard para análise territorial e temporal no RS.\par}
+\vspace{5mm}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.30\textwidth}\begin{block}{Comparar}D1 e D2, casos e incidência na mesma localidade e ano.\end{block}\end{column}
+\begin{column}{.30\textwidth}\begin{block}{Explorar}497 municípios gaúchos, com séries e filtros.\end{block}\end{column}
+\begin{column}{.30\textwidth}\begin{block}{Exportar}Tabelas e fichas para análises posteriores.\end{block}\end{column}
+\end{columns}
+\fonte{D1: primeira dose; D2: segunda dose. Brasil e UFs fornecem contexto; o detalhamento municipal é exclusivo do RS.}
+\note{Tempo: 30 segundos. O objetivo é integrar dados públicos de cobertura da vacina tríplice viral e incidência de sarampo, permitindo a análise conjunta por território e período. O foco está na vacinação e na ocorrência da doença; os dados populacionais dão suporte ao cálculo da incidência. Brasil e UFs oferecem contexto, enquanto os 497 municípios do RS têm detalhamento local. O apoio às equipes de saúde ainda será avaliado em uso real.}
+\end{frame}
+
+\section{Metodologia}
+\begin{frame}[t]{Etapas de tratamento e integração}
+\vspace{5mm}
+\centering
+\begin{tikzpicture}[node distance=3mm,box/.style={draw=InfLightGray,minimum height=25mm,text width=27mm,align=center,font=\small,inner sep=2mm},arr/.style={-{Latex[length=2mm]},InfRed,thick}]
+\node[box] (a) {\textbf{1. Fontes}\\[2mm]TABNET/SI-PNI\\SEIDIGI/DEMAS\\SINAN e IBGE};
+\node[box,right=of a] (b) {\textbf{2. Tratamento}\\[2mm]CSV e XLSX\\Código IBGE\\Dose e período};
+\node[box,right=of b] (c) {\textbf{3. Integração}\\[2mm]Banco relacional\\Localidade + ano\\Indicadores};
+\node[box,right=of c] (d) {\textbf{4. Consulta}\\[2mm]Filtros e séries\\Comparações\\Exportações};
+\draw[arr] (a)--(b);\draw[arr] (b)--(c);\draw[arr] (c)--(d);
+\end{tikzpicture}
+\par\vspace{5mm}
+\textbf{70 arquivos}\quad|\quad\textbf{2015--2026}\quad|\quad\textbf{Hash e log de qualidade}
+\fonte{Exportação manual dos portais; ETL do acervo local. 2026 parcial: cobertura jan--ago; aplicações jan--out; vigilância atualizada em setembro.}
+\note{Tempo: 35 segundos. Utilizamos dados agregados, exportados manualmente dos portais. O ETL lê o acervo local, padroniza arquivos, códigos IBGE e períodos, e carrega o SQLite. As consultas integram localidade e ano. Hash dos arquivos e log de qualidade mantêm a rastreabilidade. A série cobre 2015 a 2026, mas 2026 é parcial e não deve ser comparado diretamente com anos completos.}
+\end{frame}
+
+\section{Tecnologias utilizadas}
+\begin{frame}[t]{Tecnologias utilizadas}
+\vspace{4mm}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.30\textwidth}\begin{block}{Python + pandas}Tratamento e integração dos dados públicos.\end{block}\end{column}
+\begin{column}{.30\textwidth}\begin{block}{SQLite + SQL}Armazenamento relacional e consultas por território.\end{block}\end{column}
+\begin{column}{.30\textwidth}\begin{block}{Streamlit + Plotly}Interface, filtros e gráficos interativos.\end{block}\end{column}
+\end{columns}
+\vspace{5mm}
+\begin{itemize}\setlength{\itemsep}{2mm}
+\item \textbf{openpyxl / XlsxWriter}: leitura e exportação Excel.
+\item \textbf{SciPy}: análise exploratória; \textbf{pytest}: testes.
+\item \textbf{Git / GitHub}: versionamento do projeto.
+\end{itemize}
+\fonte{Fonte: código-fonte e dependências do projeto. Implantação em nuvem e avaliação de desempenho com múltiplos usuários ainda pendentes.}
+\note{Tempo: 30 segundos. Python e pandas tratam os dados; openpyxl lê as planilhas. SQLite e SQL mantêm o banco e as consultas. Streamlit organiza a interface e Plotly fornece gráficos interativos. XlsxWriter exporta Excel, SciPy apoia a exploração, pytest verifica as regras e Git/GitHub versionam o projeto. O SQLite dispensa servidor dedicado na implementação local.}
+\end{frame}
+
+\section{Resultados parciais}
+\begin{frame}[t]{Implementação do dashboard}
+\vspace{4mm}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.30\textwidth}\centering{\fontsize{29}{33}\selectfont\destaque{70}}\par arquivos integrados\end{column}
+\begin{column}{.30\textwidth}\centering{\fontsize{29}{33}\selectfont\destaque{497}}\par municípios do RS\end{column}
+\begin{column}{.30\textwidth}\centering{\fontsize{29}{33}\selectfont\destaque{6}}\par páginas funcionais\end{column}
+\end{columns}
+\vspace{4mm}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.47\textwidth}\begin{itemize}\setlength{\itemsep}{1mm}\item Visão geral\item Cobertura vacinal\item Casos e incidência\end{itemize}\end{column}
+\begin{column}{.47\textwidth}\begin{itemize}\setlength{\itemsep}{1mm}\item Cobertura $\times$ sarampo\item Ficha do município\item Dados e metodologia\end{itemize}\end{column}
+\end{columns}
+\vspace{3mm}\textbf{7 tabelas; 61.588 linhas; filtros e exportações CSV/Excel.}
+\fonte{Fonte: banco de dados e código-fonte do projeto. Verificação de 22/11/2026: 82 testes aprovados; avaliação com usuários pendente.}
+\note{Tempo: 35 segundos. O resultado de implementação é um fluxo completo, do acervo à consulta. Integramos 70 arquivos e os 497 municípios gaúchos em sete tabelas. São seis páginas oficiais com filtros, tabelas exportáveis e gráficos interativos. Os 82 testes aprovados na verificação documentada demonstram consistência com as regras implementadas; não substituem validação epidemiológica ou avaliação com usuários.}
+\end{frame}
+
+\begin{frame}[t]{Cobertura da segunda dose em 2025}
+\vspace{3mm}
+\textbf{2025: último ano completo do acervo}\par
+\vspace{3mm}
+\centering
+\begin{tikzpicture}[x=.092cm,y=.92cm]
+\foreach \y/\v/\nome/\rotulo in {3/78.72/Brasil/{78,72\%},2/84.62/RS/{84,62\%},1/77.47/{Porto Alegre}/{77,47\%}} {
+ \node[anchor=east] at (-3,\y+.25) {\nome};
+ \fill[InfLightGray!25] (0,\y) rectangle (100,\y+.5);
+ \fill[InfGray] (0,\y) rectangle (\v,\y+.5);
+ \node[anchor=west,font=\bfseries] at (103,\y+.25) {\rotulo};
+}
+\draw[InfRed,dashed,thick] (95,.85)--(95,3.65);
+\node[anchor=south east,text=InfRed,font=\small] at (98,3.65) {Meta: 95\%};
+\end{tikzpicture}
+\fonte{Fonte: dados de vacinação do Ministério da Saúde; extração em serie\_brasil\_rs\_poa.csv. Indicador do acervo, sujeito à validação anual.}
+\note{Tempo: 35 segundos. No acervo de 2025, a cobertura da segunda dose foi 78,72\% no Brasil, 84,62\% no RS e 77,47\% em Porto Alegre. Os três ficam abaixo da referência de 95\%. A distância em Porto Alegre é de 17,53 pontos percentuais. Esses indicadores administrativos não medem diretamente a imunidade e ainda precisam de validação em relação à cobertura anual oficial.}
+\end{frame}
+
+\section{Próximos passos}
+\begin{frame}[t]{Validação e avaliação do dashboard}
+\vspace{4mm}
+{\large\textbf{Contribuição parcial:} dados públicos integrados, consultáveis e rastreáveis.\par}
+\vspace{4mm}
+\begin{enumerate}\setlength{\itemsep}{3mm}
+\item \textbf{Validar indicadores} e reconciliar os casos com balanços oficiais.
+\item Revisar o \textbf{ranking acumulado} de incidência.
+\item \textbf{Avaliar com preceptores} e publicar a aplicação em nuvem.
+\end{enumerate}
+\vspace{3mm}\textbf{Finalidade: apoiar o acompanhamento local da vacinação.}
+\fonte{Ainda não foram medidos usabilidade, satisfação ou impacto na rotina das UBS. Recorte documental dos resultados: 22/11/2026.}
+\note{Tempo: 30 segundos. A integração e a interface estão implementadas. Os próximos passos são validar os indicadores, reconciliar os casos com balanços oficiais, revisar o ranking acumulado de incidência e avaliar tarefas com preceptores. A publicação em nuvem também está pendente. Ainda não há resultados de satisfação, usabilidade ou impacto no serviço.}
+\end{frame}
+
+\section{Perspectivas futuras}
+\begin{frame}[t]{Perspectivas futuras}
+\vspace{4mm}
+{\large Ampliar o dashboard para o \textbf{mapeamento da cobertura vacinal por área de abrangência de cada UBS}.\par}
+\vspace{5mm}
+\begin{enumerate}\setlength{\itemsep}{3mm}
+\item Relacionar dados de vacinação aos \textbf{territórios atendidos pelas UBS}.
+\item Identificar \textbf{áreas e grupos com menor cobertura} e acompanhar sua evolução.
+\item Apoiar o \textbf{planejamento de ações locais de vacinação} pelas equipes de saúde.
+\end{enumerate}
+\fonte{Perspectiva de desenvolvimento: depende de dados com detalhamento territorial e da delimitação das áreas de abrangência das UBS.}
+\note{Tempo: 40 segundos. A perspectiva futura é passar do detalhamento municipal para as áreas de abrangência de cada UBS. Com dados compatíveis e territórios delimitados, o dashboard poderá mapear a cobertura, identificar áreas e grupos com menor cobertura e acompanhar sua evolução. A intenção é apoiar as equipes no planejamento de ações locais de vacinação. Essa funcionalidade ainda não está implementada e depende de acesso a dados com detalhamento territorial adequado e da validação com os serviços.}
+\end{frame}
+
+\appendix
+\section*{Referências}
+\begin{frame}[t]{Fontes e referências}
+\vspace{3mm}
+\small
+\begin{itemize}\setlength{\itemsep}{2mm}
+\item \href{https://www.cevs.rs.gov.br/sarampo/1000}{\textbf{CEVS/SES-RS: Sarampo e Rubéola}.} Histórico da eliminação: perda em 2019 e recertificação em 2024.
+\item \href{https://www.paho.org/pt/noticias/12-11-2024-opas-verifica-que-brasil-e-mais-uma-vez-um-pais-livre-do-sarampo}{\textbf{OPAS: reverificação do Brasil como livre do sarampo} (2024).}
+\item \href{https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/guias-e-manuais/2024/manual-de-normas-e-procedimentos-para-vacinacao.pdf/@@download/file}{\textbf{Ministério da Saúde: Manual de vacinação} (2024).} Meta da tríplice viral.
+\item \href{https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/guias-e-manuais/2025/manual-de-microplanejamento-para-atividades-de-vacinacao-municipios-e-ubs.pdf}{\textbf{Ministério da Saúde: Manual de microplanejamento} (2025).} Hesitação vacinal e atuação nas UBS.
+\item \href{https://datasus.saude.gov.br/informacoes-de-saude-tabnet/}{\textbf{DATASUS/TABNET}} e \href{https://www.gov.br/saude/pt-br/vacinacao/paineis-de-vacinacao}{\textbf{Painéis de Vacinação}}. Dados de vacinação e vigilância do sarampo.
+\item \href{https://basedosdados.org/dataset/d30222ad-7a5c-4778-a1ec-f0785371d1ca}{\textbf{IBGE / Base dos Dados}}. População utilizada no cálculo da incidência.
+\end{itemize}
+\fonte{Recorte dos dados: 22/11/2026. Código-fonte e CSVs do projeto documentam o processamento. Slide de apoio, fora dos 5 minutos.}
+\note{Slide de apoio, fora do tempo do pitch. As fontes oficiais fundamentam o contexto epidemiológico, a meta vacinal, a hesitação e a origem dos dados. Os valores exibidos podem ser conferidos nos CSVs do projeto. Nenhuma versão anterior da apresentação é utilizada como fonte. O tema Inf e os logotipos fornecidos foram preservados.}
+\end{frame}
+\end{document}

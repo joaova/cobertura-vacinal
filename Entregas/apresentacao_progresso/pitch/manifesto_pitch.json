@@ -1,0 +1,47 @@
+{
+  "slides": 10,
+  "slides_pitch": 9,
+  "slides_apoio": 1,
+  "duracao_s": 300,
+  "formato": "16:9",
+  "recorte_dados": "2026-11-22",
+  "data_apresentacao": "2026-11-23",
+  "tema": "Inf original fornecido pelo usuário",
+  "arquivo_tema_preservado": true,
+  "requisitos": [
+    "motivação",
+    "objetivo",
+    "metodologia",
+    "tecnologias utilizadas",
+    "resultados parciais"
+  ],
+  "texto_editavel": true,
+  "notas_pptx": 10,
+  "pdf_principal": "PDF Beamer com o tema e os logotipos originais",
+  "pptx": "Texto nativo com fallback Arial; figuras e decoração em fundos sem texto narrativo.",
+  "sha256_fontes": {
+    "apresentacao_progresso/template_slides.txt": "f6d0b0c6672bbecb38c0034474dd617992c68b25be469e12c78ac7daa9f21843",
+    "apresentacao_progresso/pitch/beamerthemeInf.sty": "61c615950687f10c66c8240044fca7673b7dfd98e850c5f145a0e1650752b040",
+    "apresentacao_progresso/pitch/inf-logo-dark.pdf": "4e8a4c392e51e549f0032689d379148a047c3573cc406946692327fafbbda1ed",
+    "apresentacao_progresso/pitch/inf-logo-white.pdf": "5ad207d5120800b48f86004883d9d6a3d16c7a2ed907dc171b2e682158438d54",
+    "artigo_atualizado/artigo.tex": "7022000f583eca3ddcebc6652b145965a46a88062123c1b6b316e899d15e9c83",
+    "artigo_atualizado/dados/serie_brasil_rs_poa.csv": "ba1d1e06ea25081b31a76aaf2c7e4a39eb19a2f64187137366b46183abb16bc1",
+    "artigo_atualizado/dados/sensibilidade_metodos.csv": "0a113644ff75a4846686f22aed10366a9b8c85d014950570c05f0f4125d56358"
+  },
+  "sha256_entregas": {
+    "apresentacao_pitch.pdf": "cd7c9deac892284fe8f80e5ee04b3384e50857690f810684c73f9341c87f54c1",
+    "apresentacao_pitch.pptx": "827fc92a1ead85eca21bd1a665a3834d9a9b25bc20cd084c08198c97db3dc78c",
+    "apresentacao_pitch.tex": "b002d7143da6f732e47204798b948dfc01d9faa26ec9b4da9f740f220e5145e0",
+    "apresentacao_pitch_google_slides.pdf": "0c3aa0d727ef8d0fce4e725df0d4181b77a01e74c58b8b28c46c62e86cbc0da1"
+  },
+  "google_slides": "https://docs.google.com/presentation/d/1hBjGzm6wJqCkPYCGYmQl4yv_Hbv_qToytr8AsK8hNWg/edit?usp=drivesdk",
+  "revisao_google_slides": "Neg-JL2N5KYm1A",
+  "verificacao": {
+    "pdf_beamer": "10 slides revisados visualmente",
+    "google_slides": "10 slides da exportação nativa revisados visualmente; textos editáveis e 10 notas conferidos",
+    "pptx": "10 slides; integridade ZIP e XML conferida",
+    "verificador_google_slides": "Nenhum erro ou aviso estrutural",
+    "conteudo": "Conferidas motivação, frase do slide 2, objetivo, retirada da agregação e perspectivas para as UBS"
+  },
+  "observacao_render": "Poppler local apresentou falhas de transparência na exportação nativa; Ghostscript renderizou corretamente o mesmo PDF."
+}
