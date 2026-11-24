@@ -74,10 +74,10 @@ Compare a incidência de sarampo entre localidades **abaixo da meta de cobertura
 com **95% ou mais**, no ano selecionado. Esta comparação é descritiva e não demonstra causalidade.
 """)
     r1, r2, r3 = st.columns(3)
-    nivel_r = r1.radio("Unidades", ["UFs", "Municípios do RS"], key="rel_nivel")
+    nivel_r = r1.radio("Recorte geográfico", ["Brasil por UF", "RS por município"], key="rel_nivel")
     dose_r = r2.radio("Dose", ["D1", "D2"], horizontal=True, key="rel_dose")
     ano_r = r3.selectbox("Ano dos casos", config.ANOS, index=config.ANOS.index(2025), key="rel_ano")
-    tipo_r = "UF" if nivel_r == "UFs" else "MUNICIPIO"
+    tipo_r = "UF" if nivel_r == "Brasil por UF" else "MUNICIPIO"
     with st.expander("Opções da comparação"):
         lag = st.selectbox("Defasagem da cobertura (anos)",
                            [d for d in (0, 1, 2) if ano_r - d >= config.ANO_INICIAL], key="rel_lag",
@@ -199,7 +199,7 @@ com **95% ou mais**, no ano selecionado. Esta comparação é descritiva e não 
         c.mostrar_tabela(tabela_casos, f"localidades_com_casos_{tipo_r}_{ano_r}_{dose_r}_cob{ano_cobertura}", "rel_casos_t",
                          column_config={"Ano dos casos": None, "Ano da cobertura": None})
     if tipo_r == "UF":
-        st.caption("Para consultar cidades, selecione ‘Municípios do RS’. A base possui detalhamento municipal "
+        st.caption("Para consultar cidades, selecione ‘RS por município’. A base possui detalhamento municipal "
                    "apenas para o Rio Grande do Sul; nas demais UFs, os registros estão agregados por estado.")
 
     contexto = CONTEXTOS[ano_r]

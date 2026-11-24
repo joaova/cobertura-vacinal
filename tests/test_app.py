@@ -68,7 +68,7 @@ def test_cobertura_filtros_cb4():
 
 def test_cruzamento_relacao_municipios():
     at = AppTest.from_file(str(DIR / "cruzamento.py"), default_timeout=90).run()
-    at.radio(key="rel_nivel").set_value("Municípios do RS").run()
+    at.radio(key="rel_nivel").set_value("RS por município").run()
     at.selectbox(key="rel_lag").set_value(1).run()
     assert not at.exception, [e.value for e in at.exception]
 
@@ -88,7 +88,7 @@ def test_cruzamento_grupos_do_ano_selecionado():
 
 def test_cruzamento_ano_sem_casos_e_filtro_sem_localidades():
     at = AppTest.from_file(str(DIR / "cruzamento.py"), default_timeout=90).run()
-    at.radio(key="rel_nivel").set_value("Municípios do RS").run()
+    at.radio(key="rel_nivel").set_value("RS por município").run()
     at.selectbox(key="rel_ano").set_value(2023).run()
     assert not at.exception, [e.value for e in at.exception]
     assert any("Nenhum caso de sarampo registrado" in i.value for i in at.info)
@@ -125,7 +125,7 @@ def test_cruzamento_lista_ufs_com_casos_e_situacao_por_dose():
 
 def test_cruzamento_lista_municipios_com_casos_fora_do_filtro():
     at = AppTest.from_file(str(DIR / "cruzamento.py"), default_timeout=90).run()
-    at.radio(key="rel_nivel").set_value("Municípios do RS").run()
+    at.radio(key="rel_nivel").set_value("RS por município").run()
     at.selectbox(key="rel_ano").set_value(2019).run()
     assert not at.exception, [e.value for e in at.exception]
     tabela = next(d.value for d in at.dataframe if "Município" in d.value.columns)
